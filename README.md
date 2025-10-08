@@ -70,7 +70,7 @@ Criar uma aplicação web que permita o gerenciamento de **livros**, **usuários
 
 ---
 
-### 📖 Status de Leitura (novo CRUD)
+### 📖 Status de Leitura
 Gerencia o relacionamento entre **usuário** e **livro**.
 
 - **Campos:**  
@@ -85,6 +85,22 @@ Gerencia o relacionamento entre **usuário** e **livro**.
   - Listar livros por status  
 
 ---
+
+### ⭐ Favoritos
+Permite ao usuário salvar livros que ele gostou ou quer destacar.
+
+- **Campos:**  
+  - Usuário (relacionamento com `users`)  
+  - Livro (relacionamento com `books`)  
+  - Data de adição  
+
+- **Ações:**  
+  - Adicionar livro aos favoritos  
+  - Remover dos favoritos  
+  - Listar favoritos do usuário  
+
+---
+
 
 ## 🔐 Login e Sessões
 - Página de login e cadastro de usuário  
@@ -109,7 +125,11 @@ Gerencia o relacionamento entre **usuário** e **livro**.
 - O usuário pode marcar livros como:
   - 🕮 *“Quero ler”* — adiciona à lista de interesse  
   - 📖 *“Lendo”* — mostra livros em andamento  
-  - ✅ *“Lido”* — adiciona ao histórico de leituras  
+  - ✅ *“Lido”* — adiciona ao histórico de leituras
+
+### ⭐ Favoritos
+- O usuário pode favoritar livros que mais gostou.  
+- Listagem de favoritos acessível pelo perfil.  
 
 ### 💬 Comentários e Avaliações
 - Cada livro pode receber notas e comentários de leitores.  
@@ -140,7 +160,7 @@ Painel administrativo com gráficos e dados:
   - Livros (CRUD completo)  
   - Usuários (CRUD completo — apenas admin)  
   - Comentários e Avaliações  
-  - Minhas Leituras (*quero ler*, *lendo*, *lido*)  
+  - Minhas Leituras (*quero ler*, *lendo*, *lido* e Favoritos)  
   - Estatísticas e relatórios  
 
 ---
@@ -198,6 +218,14 @@ Painel administrativo com gráficos e dados:
 | text | TEXT | Comentário |
 | created_at | DATETIME | Data de criação |
 
+#### `favorites`
+| Campo | Tipo | Descrição |
+|--------|------|------------|
+| id | PK | Identificador |
+| user_id | FK → users | Usuário |
+| book_id | FK → books | Livro |
+| created_at | DATETIME | Data de adição |
+
 ---
 
 ## 💡 Diferenciais para Nota Alta
@@ -206,7 +234,7 @@ Painel administrativo com gráficos e dados:
 - Modo escuro / claro  
 - Download de relatório em PDF  
 - Painel de estatísticas com gráficos (ex: Chart.js, Recharts)  
-- Envio de e-mail ao alterar status de leitura ou recuperar senha  
+- Envio de e-mail para recuperar senha  
 
 ---
 
