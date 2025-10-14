@@ -29,22 +29,22 @@ class User:
             logger.exception(f"Erro ao buscar usuários: {e}")
             return []
 
-    # GET - retorna um usuário a partir do ID
+    # GET - retorna usuários a partir de um campo
     @staticmethod
-    def get_user(id: str) -> Optional[Dict]:
+    def get_user_by_field(key: str, value: str) -> Optional[Dict]:
         try:
+            allowed_keys = ["id", "username", "email", "role"]
+            if key not in allowed_keys:
+                raise ValueError(f"Invalid column: {key}")
             with get_cursor() as cursor:
-                cursor.execute(
-                    "SELECT *, DATE_FORMAT(created_at, '%d/%m/%Y %H:%i:%s') AS created_at FROM users WHERE id = %s",
-                    (id,),
-                )
-                user = cursor.fetchone()
+                cursor.execute(f"SELECT *, DATE_FORMAT(created_at, '%d/%m/%Y %H:%i:%s') AS created_at FROM users WHERE {key} = %s",(value,))
+                user = cursor.fetchall()
                 return UserEntity(**user)
         except Exception as e:
-            logger.exception(f"Erro ao buscar usuário: {e}")
+            logger.exception(f"Erro ao buscar usuários: {e}")
             return None
 
-    # POST - criar um usuário
+    # POST - criar usuário
     @staticmethod
     def create_user(user: UserEntity) -> bool:
         try:
@@ -53,8 +53,7 @@ class User:
                     """
                         INSERT INTO users (id, username, password, email, role)
                         VALUES (%s, %s, %s, %s)
-                    """,
-                    (user.id, user.username, user.password, user.email, user.role),
+                    """, (user.id, user.username, user.password, user.email, user.role),
                 )
             return True
         except Exception as e:
