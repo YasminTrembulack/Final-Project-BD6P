@@ -239,3 +239,12 @@ Painel administrativo com gráficos e dados:
 ---
 
 📚 *Um sistema de leitura digital moderno e interativo, que incentiva a descoberta, o registro e o compartilhamento de experiências literárias.*
+
+---
+
+https://storyset.com/search
+https://dribbble.com/tags/login-ui
+https://uizard.io/templates/mobile-app-templates/book-reading-mobile-app/
+
+https://coolors.co/ffffff-fbf8f0-f3ebd9-fea73b-3a3967
+https://coolors.co/3a3967-fea73b-cc9a00-05070b-303030-797573-c2b9b5-f3ebd9-fbf8f0-ffffff
