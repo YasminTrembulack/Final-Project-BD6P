@@ -1,0 +1,106 @@
+/* HEADER COM TEMA LARANJA/AMARELO */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(90deg, var(--brand-500), var(--brand-800));
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 40px;
+  box-shadow: 0 5px 20px var(--shadow-200);
+  z-index: 100;
+}
+
+/* LOGO COM SOMBRA */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  filter: drop-shadow(0px 0px 4px var(--shadow-500));
+}
+
+.logo span {
+  font-family:var(--font-title); 
+  font-size: 1.5rem;
+  color: var(--neutral-000);
+  font-weight: 600;
+  text-shadow: 1px 1px 3px var(--shadow-300);
+}
+
+/* LINKS DO MENU */
+.nav a {
+  margin-left: 25px;
+  text-decoration: none;
+  color: var(--neutral-000);
+  font-weight: 500;
+  position: relative; /* necessário para o pseudo-elemento */
+  transition: color 0.3s ease;
+}
+
+/* Indicativo de hover com underline animado */
+.nav a:not(.btn-login)::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -4px; /* ligeiramente abaixo do texto */
+  width: 0%;
+  height: 2px;
+  background-color: var(--neutral-000); /* destaque da marca */
+  transition: width 0.3s ease;
+}
+
+.nav a:not(.btn-login):hover {
+  color: var(--neutral-000); /* muda a cor do texto também */
+}
+
+.nav a:not(.btn-login):hover::after {
+  width: 100%; /* underline se expande */
+}
+
+/* BOTÃO ESCURO MODERNO */
+.btn-login {
+  background-color: var(--neutral-800);
+  color: var(--neutral-000);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  margin-left: 15px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px var(--shadow-300);
+  border: none;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.btn-login:hover {
+  background-color: var(--neutral-850);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px var(--shadow-300);
+}
+
+/* FOOTER */
+.footer {
+  background-color: var(--neutral-900);
+  text-align: center;
+  padding: 25px 20px;
+  color: var(--neutral-400);
+  font-size: 0.9rem;
+  box-shadow: 0 -2px 8px var(--shadow-300);
+}
+
+
+@media (max-width: 900px) {
+  .nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 10px;
+  }
+}

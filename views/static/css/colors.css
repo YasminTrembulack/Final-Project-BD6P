@@ -1,0 +1,78 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Playfair+Display:wght@400;600;700&display=swap');
+
+:root {
+  /* ✍️ FONTES */
+  --font-primary: 'Poppins', sans-serif;         /* texto padrão e botões */
+  --font-title: 'Playfair Display', serif;       /* títulos e logo */
+
+  /* 🎨 CORES DE MARCA */
+  --brand-100: #fff3e0;   /* Laranja muito claro */
+  --brand-200: #ffe0b2;  
+  --brand-300: #ffcc80;  
+  --brand-400: #ffb74d;  
+  --brand-500: #ff9800;   /* Laranja médio */
+  --brand-600: #fb8c00;  
+  --brand-700: #f57c00;  
+  --brand-800: #ef6c00;  
+  --brand-900: #e65100;   /* Laranja profundo */
+
+  /* ⚙️ ESCALA DE NEUTROS */
+  --neutral-000: #ffffff;  /* Branco puro */
+  --neutral-050: #fcfcfd;  /* Quase branco */
+  --neutral-100: #f8f9fb;  /* Fundo claro padrão */
+  --neutral-150: #f2f3f5;  
+  --neutral-200: #ebecee;  
+  --neutral-250: #e5e6e8;  
+  --neutral-300: #dedfe1;  
+  --neutral-350: #d5d6d8;  
+  --neutral-400: #cccccc;  /* Bordas suaves */
+  --neutral-450: #b3b3b3;  
+  --neutral-500: #999999;  /* Texto secundário */
+  --neutral-550: #808080;  
+  --neutral-600: #666666;  /* Texto neutro */
+  --neutral-650: #555555;  
+  --neutral-700: #444444;  /* Texto forte */
+  --neutral-750: #383838;  
+  --neutral-800: #2c2c2c;  /* Fundo escuro */
+  --neutral-850: #242424;  
+  --neutral-900: #1f1f1f;  /* Fundo profundo */
+  --neutral-950: #181818;  
+  --neutral-1000: #121212; /* Base do dark mode */
+  --neutral-1100: #0e0e0e;
+  --neutral-1200: #0a0a0a;
+  --neutral-1300: #080808;
+  --neutral-1400: #000000; /* Preto absoluto */
+  
+  /* ✨ EFEITOS E SOMBRAS */
+  --shadow-100: rgba(0, 0, 0, 0.10);
+  --shadow-200: rgba(0, 0, 0, 0.15);
+  --shadow-300: rgba(0, 0, 0, 0.25);
+  --shadow-400: rgba(0, 0, 0, 0.45);
+  --shadow-500: rgba(0, 0, 0, 0.70);
+}
+
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--neutral-150);
+  color: var(--neutral-900);
+  line-height: 1.6;
+}
+
+/* ANIMAÇÃO */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
