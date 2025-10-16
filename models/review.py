@@ -7,11 +7,10 @@ from models.db import BaseEntity, get_cursor
 
 @dataclass
 class ReviewEntity(BaseEntity):
-    upc: str
-    title: str
-    img_link: str
-    description: str
-    category: str
+    user_id: str
+    book_id: str
+    rating: int
+    comment: str
 
 
 class Review:
@@ -21,7 +20,7 @@ class Review:
     def get_reviews() -> List[ReviewEntity]:
         try:
             with get_cursor() as cursor:
-                cursor.execute("SELECT *, DATE_FORMAT(created_at, '%d/%m/%Y %H:%i:%s') as created_at FROM reviews ORDER BY title ASC")
+                cursor.execute("SELECT *, DATE_FORMAT(created_at, '%d/%m/%Y %H:%i:%s') as created_at FROM reviews ORDER BY created_at ASC")
                 reviews = cursor.fetchall()
                 return [ReviewEntity(**u) for u in reviews]
         except Exception as e:
@@ -50,9 +49,9 @@ class Review:
             with get_cursor() as cursor:
                 cursor.execute(
                     """
-                        INSERT INTO reviews (id, upc, title, img_link, description, category)
-                        VALUES (%s, %s, %s, %s, %s, %s)
-                    """, (review.id, review.upc, review.title, review.img_link, review.description, review.category),
+                        INSERT INTO reviews (id, user_id, book_id, rating, comment)
+                        VALUES (%s, %s, %s, %s, %s)
+                    """, (review.id, review.user_id, review.book_id, review.rating, review.comment,),
                 )
             return True
         except Exception as e:
