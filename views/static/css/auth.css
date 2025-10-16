@@ -56,9 +56,9 @@
   padding: 40px;
 }
 
-.form-box {
+/* .form-box {
   background-color: var(--neutral-000);
-  padding: 50px 45px;
+  padding: 35px 45px;
   border-radius: 16px;
   box-shadow: 0 8px 25px var(--shadow-100);
   width: 100%;
@@ -109,10 +109,10 @@
 button {
   width: 100%;
   padding: 12px;
-  background-color: var(--brand-800);
-  border: none;
-  border-radius: 8px;
+  background-color: var(--brand-500);
   color: var(--neutral-000);
+  border: none;
+  border-radius: 25px;
   font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
@@ -122,7 +122,7 @@ button {
 button:hover {
   background-color: var(--brand-600);
   transform: translateY(-2px);
-}
+} */
 
 .register-text {
   margin-top: 20px;
