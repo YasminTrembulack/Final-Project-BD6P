@@ -1,0 +1,37 @@
+.hero {
+  height: 40vh;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: var(--neutral-000);
+  margin-top: 70px;
+}
+
+.hero-small::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(var(--shadow-300), var(--shadow-300));
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  animation: fadeInUp 1.2s ease;
+}
+
+.hero h1 {
+  font-family: var(--font-title);
+  font-size: 3rem;
+  margin-bottom: 10px;
+  color: var(--neutral-000);
+  filter: drop-shadow(0px 0px 6px var(--shadow-500));
+}
+
+.hero p {
+  font-size: 1.2rem;
+  color: var(--neutral-100);
+  filter: drop-shadow(0px 0px 6px var(--shadow-500));
+}

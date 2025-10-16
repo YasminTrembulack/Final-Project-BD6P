@@ -35,8 +35,20 @@
   text-shadow: 1px 1px 3px var(--shadow-300);
 }
 
+.nav{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.nav a:not(.btn-login){
+  height: 20px;
+}
+
 /* LINKS DO MENU */
 .nav a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-left: 25px;
   text-decoration: none;
   color: var(--neutral-000);
@@ -52,13 +64,9 @@
   left: 0;
   bottom: -4px; /* ligeiramente abaixo do texto */
   width: 0%;
-  height: 2px;
+  height: 1px;
   background-color: var(--neutral-000); /* destaque da marca */
   transition: width 0.3s ease;
-}
-
-.nav a:not(.btn-login):hover {
-  color: var(--neutral-000); /* muda a cor do texto também */
 }
 
 .nav a:not(.btn-login):hover::after {
@@ -94,6 +102,92 @@
   color: var(--neutral-400);
   font-size: 0.9rem;
   box-shadow: 0 -2px 8px var(--shadow-300);
+}
+
+
+/* --- CONTAINER DO MENU DE PERFIL --- */
+.profile-menu {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-left: 25px;
+  cursor: pointer;
+}
+
+.profile-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.profile-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--neutral-800);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 6px var(--shadow-300);
+  transition: transform 0.2s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+.profile-icon:hover {
+  transform: scale(1.05);
+  background-color: var(--neutral-850);
+}
+
+.username {
+  color: var(--neutral-800);
+  font-family: var(--font-primary);
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-shadow: 1px 1px 2px var(--shadow-400);
+  user-select: none;
+}
+
+.arrow-down {
+  transition: transform 0.3s ease;
+}
+
+/* DROPDOWN MENU */
+.profile-dropdown {
+  position: absolute;
+  top: 60px;
+  right: 0;
+  background-color: var(--neutral-900);
+  border-radius: 10px;
+  box-shadow: 0 5px 15px var(--shadow-300);
+  list-style: none;
+  padding: 8px 0;
+  min-width: 140px;
+  display: none;
+  z-index: 200;
+}
+
+.profile-dropdown li {
+  padding: 8px 16px;
+}
+
+.profile-dropdown li a {
+  color: var(--neutral-100);
+  text-decoration: none;
+  margin: 0;
+  font-weight: 500;
+  display: block;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.profile-dropdown li a:hover {
+  color: var(--neutral-000);
+}
+
+/* MOSTRAR DROPDOWN QUANDO ATIVO */
+.profile-menu.active .profile-dropdown {
+  display: block;
+}
+
+.profile-menu.active .arrow-down {
+  transform: rotate(180deg);
 }
 
 
