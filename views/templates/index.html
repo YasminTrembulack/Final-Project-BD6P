@@ -5,13 +5,23 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sobre Nós | LitScore</title>
-  <link rel="stylesheet" href="../static/css/colors.css" />
+  <link rel="stylesheet" href="../static/css/style.css" />
   <link rel="stylesheet" href="../static/css/header.css" />
   <link rel="stylesheet" href="../static/css/hero.css" />
   <link rel="stylesheet" href="../static/css/index.css" />
 </head>
 
 <body>
+  {% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+      <div id="flash-messages" class="header-space">
+        {% for category, message in messages %}
+          <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
   <!-- HEADER -->
   <header class="header">
     <div class="logo">
@@ -20,9 +30,37 @@
     </div>
     <nav class="nav">
       <a href="#">Sobre nós</a>
-      <a href="./books.html">Livros</a>
-      <a href="./contact.html">Contato</a>
-      <a href="./login.html" class="btn-login">Entrar</a>
+      <a href="{{ url_for('get_books') }}">Livros</a>
+      <a href="{{ url_for('contact') }}">Contato</a>
+      {% if logged_user and logged_user.role == 'admin'%}
+      <a href="{{ url_for('get_users') }}">Usuários</a>
+      {% endif %}
+
+      <!-- MENU DE PERFIL -->
+      {% if logged_user %}
+        <div class="profile-menu" id="profileMenu">
+          <div class="profile-info" id="profileTrigger">
+            <div class="profile-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="22" height="22">
+                <path d="M12 12c2.67 0 8 1.34 8 4v4H4v-4c0-2.66 5.33-4 8-4zm0-2a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" />
+              </svg>
+            </div>
+            <span class="username">{{ logged_user.username }}</span>
+            <svg class="arrow-down" xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" width="18"
+              height="18">
+              <path d="M7 10l5 5 5-5H7z" />
+            </svg>
+          </div>
+
+          <ul class="profile-dropdown" id="profileDropdown">
+            <li><a href="{{ url_for('get_user', user_id=logged_user.id) }}">Meu perfil</a></li>
+            
+            <li><a href="{{ url_for('logout') }}">Sair</a></li>
+          </ul>
+        </div>
+      {% else %}
+        <a href="{{ url_for('login') }}" class="btn-login">Entrar</a>
+      {% endif %}
     </nav>
   </header>
 
@@ -141,15 +179,12 @@
     </div>
   </section>
 
-
-
-
-
   <!-- FOOTER -->
   <footer class="footer">
     <p>© 2025 LitScore — Todos os direitos reservados.</p>
   </footer>
   <script src="../static/js/profile-dropdown.js"></script>
+  <script src="../static/js/flash-message.js"></script>
 </body>
 
 </html>

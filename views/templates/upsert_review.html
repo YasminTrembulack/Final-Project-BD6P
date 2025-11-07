@@ -7,7 +7,6 @@
     <title>Detalhes do Livro | LitScore</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/book-details.css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/forms.css') }}" />
 </head>
 
@@ -67,73 +66,9 @@
 
     <!-- DETALHES DO LIVRO -->
     {% if logged_user %}
-    <section class="book-details">
-        <div class="book-cover">
-            {% if book.img_link and book.img_link.startswith('cover_uploads/')%}
-            <img src="{{ url_for('static', filename=book.img_link ) }}   " alt="Capa do Livro">
-            {% elif book.img_link %}
-            <img src="{{ book.img_link }}" alt="Capa do Livro">
-            {% else %}
-            <img src="{{ 'https://plus.unsplash.com/premium_photo-1675738775295-dffbbd2e6f34?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=687' }}"
-                alt="Capa do Livro">
-            {% endif %}
-        </div>
-        <div class="book-info">
-            <h1>{{ book.title }}</h1>
-            <p class="author">{{ book.author }}</p>
-            <p class="genre"><strong>Gênero:</strong> {{ book.category }}</p>
-            <p class="upc"><strong>Código UPC:</strong> {{ book.upc.upper() }}</p>
-            <p class="description"> {{ book.description }}</p>
-            <div class="book-actions">
-                <button class="favorite-btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="white">
-                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 
-                            4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 
-                            14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                    </svg>
-                    Favoritar
-                </button>
-                <button id="openModal" class="review-btn">Avaliar</button>
-            </div>
-
-            <div class="reviews-section">
-                <h2>Comentários</h2>
-                {% if reviews %}
-                {% for review in reviews %}
-                <div class="review">
-                    <div class="review-header">
-                        <div class="author-section">
-                            <span class="review-author">{{ review.user.username }}</span>
-                            <div class="review-stars">
-                                {% for i in range(1, 6) %}
-                                <span class="star {% if i <= review.rating %}filled{% endif %}">★</span>
-                                {% endfor %}
-                            </div>
-                        </div>
-                        <div class="review-controls">
-                            {% if logged_user and logged_user.id == review.user_id %}
-                            <a href="{{ url_for('get_book', book_id=book.id, review_id=review.id )}}"
-                                class="edit-review">Editar</a>
-                            {% endif %}
-                            {% if logged_user and logged_user.role == 'admin' or logged_user.id == review.user_id %}
-                            <a href="{{ url_for('delete_review', review_id=review.id, book_id=book.id )}}"
-                                class="delete-review">Deletar</a>
-                            {% endif %}
-                            <span class="review-date">{{ review.created_at.strftime('%d/%m/%Y %H:%M')}}</span>
-                        </div>
-
-                    </div>
-                    <p class="review-text">{{ review.comment }}</p>
-                </div>
-                {% endfor %}
-                {% else %}
-                <p>Nenhum comentário ainda.</p>
-                {% endif %}
-            </div>
-    </section>
 
     <!-- MODAL -->
-    <div id="Modal" class="modal{% if review_to_update %} active{% endif %}">
+    <div id="Modal" class="modal active">
         <div class="form-content comment-form">
             <h2>{% if review_to_update %}Atualizar Comentário{% else %}Adicionar Comentário{% endif %}</h2>
             <p class="form-subtitle">Compartilhe sua opinião sobre este livro.</p>
@@ -175,7 +110,9 @@
 
         </div>
     </div>
+
     {% else %}
+
     <div class="empty-page">
         <div class="login-box">
             <h2>Você precisa estar logado</h2>
@@ -186,9 +123,8 @@
             </div>
         </div>
     </div>
+
     {% endif %}
-
-
 
     <footer class="footer">
         <p>© 2025 LitScore — Todos os direitos reservados.</p>

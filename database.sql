@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS books (
   id CHAR(36) NOT NULL PRIMARY KEY,
   upc VARCHAR(50) NOT NULL UNIQUE,
   title VARCHAR(255) NOT NULL,
+  author VARCHAR(255) NOT NULL DEFAULT 'Unknown',
   img_link TEXT,
   description TEXT,
   category VARCHAR(100),

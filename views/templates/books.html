@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sobre Nós | LitScore</title>
-    <link rel="stylesheet" href="../static/css/colors.css" />
+    <title>Livros | LitScore</title>
+    <link rel="stylesheet" href="../static/css/style.css" />
     <link rel="stylesheet" href="../static/css/header.css" />
     <link rel="stylesheet" href="../static/css/hero.css" />
     <link rel="stylesheet" href="../static/css/books.css" />
@@ -13,6 +13,16 @@
 </head>
 
 <body>
+    {% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+    <div id="flash-messages" class="header-space">
+        {% for category, message in messages %}
+        <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
     <!-- HEADER -->
     <header class="header">
         <div class="logo">
@@ -21,11 +31,15 @@
         </div>
 
         <nav class="nav">
-            <a href="./index.html">Sobre nós</a>
+            <a href="{{ url_for('index') }}">Sobre nós</a>
             <a href="#">Livros</a>
-            <a href="./contact.html">Contato</a>
+            <a href="{{ url_for('contact') }}">Contato</a>
+            {% if logged_user and logged_user.role == 'admin'%}
+            <a href="{{ url_for('get_users') }}">Usuários</a>
+            {% endif %}
 
             <!-- MENU DE PERFIL -->
+            {% if logged_user %}
             <div class="profile-menu" id="profileMenu">
                 <div class="profile-info" id="profileTrigger">
                     <div class="profile-icon">
@@ -34,7 +48,7 @@
                                 d="M12 12c2.67 0 8 1.34 8 4v4H4v-4c0-2.66 5.33-4 8-4zm0-2a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" />
                         </svg>
                     </div>
-                    <span class="username">Yasmin Trembulack</span>
+                    <span class="username">{{ logged_user.username }}</span>
                     <svg class="arrow-down" xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24"
                         width="18" height="18">
                         <path d="M7 10l5 5 5-5H7z" />
@@ -42,14 +56,16 @@
                 </div>
 
                 <ul class="profile-dropdown" id="profileDropdown">
-                    <li><a href="./profile.html">Meu perfil</a></li>
-                    <li><a href="./favorites.html">Favoritos</a></li>
-                    <li><a href="./logout.html">Sair</a></li>
+                    <li><a href="{{ url_for('get_user', user_id=logged_user.id) }}">Meu perfil</a></li>
+                    
+                    <li><a href="{{ url_for('logout') }}">Sair</a></li>
                 </ul>
             </div>
+            {% else %}
+            <a href="{{ url_for('login') }}" class="btn-login">Entrar</a>
+            {% endif %}
         </nav>
     </header>
-
 
     <!-- HERO -->
     <section class="hero">
@@ -59,10 +75,13 @@
         </div>
     </section>
 
-
     <section class="books">
+
+        {% if logged_user %}
         <div class="search-bar">
+            {% if logged_user.role == 'admin' %}
             <button id="openModal" class="add-book-btn">Adicionar Livro</button>
+            {% endif %}
             <select class="filter-select">
                 <option value="titulo" selected>Título</option>
                 <option value="upc">Códico UPC</option>
@@ -79,97 +98,142 @@
                 </button>
             </div>
         </div>
+        {% endif %}
+
         <div class="books-grid">
+            {% for book in books %}
             <div class="book-card">
-                <img src="https://images.unsplash.com/photo-1529655683826-aba9b3e77383?w=500" alt="Capa do Livro">
+                <a href="{% if logged_user %}{{ url_for('get_book', book_id=book.id) }}{% else %}#{% endif %}"
+                    class="book-card-link">
+                    {% if book.img_link and book.img_link.startswith('cover_uploads/')%}
+                    <img src="{{ url_for('static', filename=book.img_link ) }}   " alt="Capa do Livro">
+                    {% elif book.img_link %}
+                    <img src="{{ book.img_link }}" alt="Capa do Livro">
+                    {% else %}
+                    <img src="{{ 'https://plus.unsplash.com/premium_photo-1675738775295-dffbbd2e6f34?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=687' }}"
+                        alt="Capa do Livro">
+                    {% endif %}
+                </a>
+                {% if logged_user and logged_user.role == 'admin'%}
+                <div class="book-actions">
+                    <a href="{{ url_for('get_books', book_id=book.id )}}" class="edit-review">Editar</a>
+                    <a href="{{ url_for('delete_book', book_id=book.id )}}" class="delete-review">Deletar</a>
+                </div>
+                {% endif %}
                 <div class="book-info">
-                    <h3>O Sol é Para Todos</h3>
-                    <p>Harper Lee</p>
+                    <h3>{{ book.title }}</h3>
+                    <p>{{ book.author }}</p>
                 </div>
             </div>
-
-            <div class="book-card">
-                <img src="https://images.unsplash.com/photo-1528207776546-365bb710ee93?w=500" alt="Capa do Livro">
-                <div class="book-info">
-                    <h3>1984</h3>
-                    <p>George Orwell</p>
-                </div>
-            </div>
-
-            <div class="book-card">
-                <img src="https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=500" alt="Capa do Livro">
-                <div class="book-info">
-                    <h3>Dom Casmurro</h3>
-                    <p>Machado de Assis</p>
-                </div>
-            </div>
-
-            <div class="book-card">
-                <img src="https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=500" alt="Capa do Livro">
-                <div class="book-info">
-                    <h3>Dom Casmurro</h3>
-                    <p>Machado de Assis</p>
-                </div>
-            </div>
-
-            <div class="book-card">
-                <img src="https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=500" alt="Capa do Livro">
-                <div class="book-info">
-                    <h3>Dom Casmurro</h3>
-                    <p>Machado de Assis</p>
-                </div>
-            </div>
-
+            {% endfor %}
+            {% for _ in range(empty_cards) %}
             <div class="book-card empty-card"></div>
-            <div class="book-card empty-card"></div>
-            <div class="book-card empty-card"></div>
-
-
+            {% endfor %}
         </div>
 
         <!-- Modal de Adição de Livro -->
-        <div class="modal-overlay" id="Modal">
+        <div class="modal-overlay {% if book_to_update %} active{% endif %}" id="Modal">
             <div class="form-content">
                 <h2>Adicionar Novo Livro</h2>
                 <p class="form-subtitle">Preencha as informações do livro.</p>
-                <form>
-                    <div class="input-group">
-                        <label for="book-title">Título</label>
-                        <input type="text" id="book-title" placeholder="Digite o título do livro">
+
+                <form action="{% if book_to_update %}{{ url_for('update_book', book_id=book_to_update.id) }}{% else %}{{ url_for('create_book') }}{% endif %}" method="POST" enctype="multipart/form-data">
+                    <div class="form-grid">
+                        <div class="input-group">
+                            <label for="book-title">Título<span class="required">*</span></label>
+                            <input type="text" value="{{ book_to_update.title if book_to_update else '' }}" name="title"
+                                id="book-title" placeholder="Digite o título do livro">
+                        </div>
+                        <div class="input-group">
+                            <label for="book-author">Autor<span class="required">*</span></label>
+                            <input type="text" name="author"
+                                value="{{ book_to_update.author if book_to_update else '' }}" id="book-author"
+                                placeholder="Digite o nome do autor">
+                        </div>
+                        <div class="input-group">
+                            <label for="book-upc">Código UPC<span class="required">*</span></label>
+                            <input type="text" class="upc" id="book-upc"
+                                value="{{ book_to_update.upc if book_to_update else '' }}" name="upc"
+                                placeholder="Digite o código UPC">
+                        </div>
+                        <div class="input-group">
+                            <label for="book-category">Categoria
+                            </label>
+                            <select name="category" id="book-category">
+                                <option value="">Selecione a categoria...</option>
+                                {% if categories %}
+                                {% for category in categories %}
+                                {% if book_to_update and book_to_update.category == category%}
+                                <option value="{{ category }}" selected>{{ category }}</option>
+                                {% else %}
+                                <option value="{{ category }}">{{ category }}</option>
+                                {% endif %}
+                                {% endfor %}
+                                {% endif %}
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <div class="file-upload">
+                                <input type="file" name="cover" id="cover" accept="image/*" />
+                                <label for="cover" id="cover-label">
+                                    {% if book_to_update and book_to_update.img_link %}
+                                    {{ book_to_update.img_link
+                                    |replace('cover_uploads/', '')
+                                    |replace('_' ~ book_to_update.id, '')
+                                    }}
+                                    {% else %}
+                                    Selecione uma capa para o livro...
+                                    {% endif %}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="input-group full-width">
+                            <label for="description">Descrição</label>
+                            <textarea id="description" name="description" rows="4"
+                                placeholder="Escreva a descrição do livro..."
+                                required>{{ book_to_update.description if book_to_update else '' }}</textarea>
+                        </div>
                     </div>
-                    <div class="input-group">
-                        <label for="book-author">Autor</label>
-                        <input type="text" id="book-author" placeholder="Digite o nome do autor">
-                    </div>
-                    <div class="input-group">
-                        <label for="book-upc">Código UPC</label>
-                        <input type="text" id="book-upc" placeholder="Digite o código UPC">
-                    </div>
-                    <div class="input-group">
-                        <label for="book-genre">Gênero</label>
-                        <input type="text" id="book-genre" placeholder="Digite o gênero do livro">
-                    </div>
+
                     <button type="submit">Adicionar Livro</button>
                 </form>
             </div>
         </div>
 
 
+        {% if logged_user %}
         <div class="pagination">
-            <button class="page-btn prev" disabled>‹</button>
+            {# Botão Anterior #}
+            <a class="page-btn prev {% if not pagination_info.has_prev %}disabled{% endif %}"
+                href="{% if pagination_info.has_prev %}{{ url_for('get_books', page=pagination_info.page - 1) }}{% else %}#{% endif %}">‹</a>
 
-            <button class="page-btn active">1</button>
-            <button class="page-btn">2</button>
-            <button class="page-btn">3</button>
+            {% if start_page > 1 %}
+            <a class="page-btn" href="{{ url_for('get_books', page=1) }}">1</a>
+            {% if start_page > 2 %}
             <span class="page-dots">...</span>
-            <button class="page-btn">10</button>
+            {% endif %}
+            {% endif %}
 
-            <button class="page-btn next">›</button>
+            {% for num in range(start_page, end_page + 1) %}
+            <a href="{{ url_for('get_books', page=num) }}"
+                class="page-btn {% if num == pagination_info.page %}active{% endif %}">{{ num }}</a>
+            {% endfor %}
+
+            {% if end_page < pagination_info.total_pages %} {% if end_page < pagination_info.total_pages - 1 %} <span
+                class="page-dots">...</span>
+                {% endif %}
+                <a class="page-btn" href="{{ url_for('get_books', page=pagination_info.total_pages) }}">
+                    {{ pagination_info.total_pages }}
+                </a>
+                {% endif %}
+
+                {# Botão Próximo #}
+                <a class="page-btn next {% if not pagination_info.has_next %}disabled{% endif %}"
+                    href="{% if pagination_info.has_next %}{{ url_for('get_books', page=pagination_info.page + 1) }}{% else %}#{% endif %}">›</a>
         </div>
+
+        {% endif %}
     </section>
-
-
-
 
 
 
@@ -178,8 +242,11 @@
     <footer class="footer">
         <p>© 2025 LitScore — Todos os direitos reservados.</p>
     </footer>
-    <script src="../static/js/profile-dropdown.js"></script>
-    <script src="../static/js/modal-close.js"></script>
+
+    <script src="{{ url_for('static', filename='js/profile-dropdown.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/modal-close-open.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/flash-message.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/file-input.js') }}"></script>
 </body>
 
 </html>

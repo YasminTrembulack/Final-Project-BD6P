@@ -3,8 +3,10 @@
   padding: 35px 45px;
   border-radius: 16px;
   box-shadow: 0 8px 25px var(--shadow-100);
-  width: 100%;
-  max-width: 420px;
+  /* width: 100%; */
+  width: min-content;
+  min-width: 420px;
+  max-width: 800px;
   position: relative;
 }
 
@@ -35,7 +37,7 @@
   margin-bottom: 5px;
 }
 
-.form-content .input-group input {
+.form-content .input-group input, select:not(.filter-select) {
   width: 100%;
   padding: 12px;
   border: 1.5px solid var(--neutral-400);
@@ -44,10 +46,15 @@
   transition: all 0.3s ease;
 }
 
-.form-content .input-group input:focus {
+.form-content .input-group input:focus, select:not(.filter-select) {
   border-color: var(--brand-800);
   box-shadow: 0 0 6px rgba(255, 152, 0, 0.3);
   outline: none;
+}
+
+.required{
+  color: #dc3545;
+  font-weight: 500;
 }
 
 .form-content button {
@@ -66,4 +73,75 @@
 .form-content button[type="submit"]:hover {
   background-color: var(--brand-600);
   transform: translateY(-2px);
+}
+
+textarea {
+  width: 100%;
+  resize: none;
+  padding: 12px;
+  border: 1.5px solid var(--neutral-400);
+  border-radius: 8px;
+  font-family: var(--font-primary);
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+textarea:focus {
+  border-color: var(--brand-800);
+  box-shadow: 0 0 6px rgba(255, 152, 0, 0.3);
+  outline: none;
+}
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0 30px;
+  min-width: 600px;
+}
+
+/* As duas primeiras linhas (4 primeiros campos) terão duas colunas */
+.form-grid > :nth-child(-n+4) {
+  grid-column: span 1;
+}
+
+/* A partir do 5º campo, ocupa toda a largura */
+.form-grid > :nth-child(n+5) {
+  grid-column: 1 / -1;
+}
+
+.file-upload {
+  width: 100%;
+}
+
+.file-upload input[type="file"] {
+  display: none; /* Esconde o input real */
+}
+
+.file-upload label {
+  width: 100%;
+  padding: 12px;
+  border: 1.5px solid var(--neutral-400);
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+/* Efeito visual ao passar o mouse */
+.file-upload label:hover {
+  border-color: var(--brand-500, #ff7a00);
+}
+
+/* Se quiser centralizar dentro de forms */
+.file-upload {
+  margin-top: 10px;
+}
+
+
+/* Responsivo: 1 coluna em telas menores */
+@media (max-width: 650px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  .form-grid > * {
+    grid-column: 1 / -1;
+  }
 }

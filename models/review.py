@@ -2,7 +2,9 @@ from loguru import logger
 from dataclasses import dataclass
 from typing import Dict, List, Optional
 
+from models.book import BookEntity
 from models.db import BaseEntity, get_cursor
+from models.user import UserEntity
 
 
 @dataclass
@@ -11,6 +13,8 @@ class ReviewEntity(BaseEntity):
     book_id: str
     rating: int
     comment: str
+    user: Optional[UserEntity] = None
+    book: Optional[BookEntity] = None
 
 
 class Review:
@@ -20,7 +24,7 @@ class Review:
     def get_reviews() -> List[ReviewEntity]:
         try:
             with get_cursor() as cursor:
-                cursor.execute("SELECT *, DATE_FORMAT(created_at, '%d/%m/%Y %H:%i:%s') as created_at FROM reviews ORDER BY created_at ASC")
+                cursor.execute("SELECT *, DATE_FORMAT(created_at, '%d/%m/%Y %H:%i:%s') as created_at FROM reviews ORDER BY created_at DES")
                 reviews = cursor.fetchall()
                 return [ReviewEntity(**u) for u in reviews]
         except Exception as e:
@@ -29,15 +33,18 @@ class Review:
 
     # GET - retorna avaliações a partir de um campo
     @staticmethod
-    def get_review_by_field(key: str, value: str) -> Optional[Dict]:
+    def get_review_by_field(key: str, value: str) -> Optional[List[ReviewEntity]]:
         try:
-            allowed_keys = ["id", "user_id", "book_id", "rating"]
+            allowed_keys = {"id", "user_id", "book_id", "rating"}
             if key not in allowed_keys:
                 raise ValueError(f"Invalid column: {key}")
             with get_cursor() as cursor:
-                cursor.execute(f"SELECT *, DATE_FORMAT(created_at, '%d/%m/%Y %H:%i:%s') AS created_at FROM reviews WHERE {key} = %s",(value,))
-                review = cursor.fetchall()
-                return ReviewEntity(**review)
+                cursor.execute(f"SELECT * FROM reviews WHERE {key} = %s ORDER BY created_at DESC",(value,))
+                if key == 'id':
+                    review = cursor.fetchone()
+                    return ReviewEntity(**review) if review else None
+                reviews = cursor.fetchall()
+                return [ReviewEntity(**u) for u in reviews]
         except Exception as e:
             logger.exception(f"Erro ao buscar avaliações: {e}")
             return None
@@ -64,8 +71,8 @@ class Review:
         try:
             with get_cursor() as cursor:
                 cursor.execute(
-                    "UPDATE reviews SET upc = %s, title = %s, img_link = %s, description = %s, category = %s WHERE id = %s",
-                    (review.upc, review.title, review.img_link, review.description, review.category, review.id),
+                    "UPDATE reviews SET user_id = %s, book_id = %s, rating = %s, comment = %s WHERE id = %s",
+                    (review.user_id, review.book_id, review.rating, review.comment, review.id),
                 )
             return True
         except Exception as e:

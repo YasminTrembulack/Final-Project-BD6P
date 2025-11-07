@@ -1,28 +1,59 @@
+import bcrypt
+
 from flask import Flask, flash, redirect, render_template, request, session, url_for
+
+from loguru import logger
 from models.user import User
 
 def configure_routes(app: Flask):
     
-    @app.route('/login', method=['GET', 'POST'])
+    @app.route('/login', methods=['GET', 'POST'])
     def login():
-        if request.method == 'POST':
-            email = request.form['email']
-            password = request.form['password']
+        if request.method == 'GET':
+            return render_template('login.html')
 
-            user = User.get_by_email(email)
-            if user and user.check_password(password):
-                session['user_id'] = user.id
-                session['user_role'] = user.role
-                session['user_email'] = user.email
-                session['user_username'] = user.username
-                session['user_created_at'] = user.created_at
-                return redirect(url_for('books'))
-            else:
-                flash('Email ou senha incorretos!')
+        try:
+            email_username = request.form.get('email_username', '').strip()
+            password = request.form.get('password', '')
 
-        return render_template('login.html')
+            # --- validações básicas ---
+            if not email_username or not password:
+                flash('Preencha todos os campos.', 'warning')
+                return render_template('login.html')
+
+            # --- busca por email OU username ---
+            user = (
+                User.get_user_by_field('email', email_username)
+                or User.get_user_by_field('username', email_username)
+            )
+
+            hashed_password = user.password.encode('utf-8')
+            input_password = password.encode('utf-8')
+
+            # --- valida senha ---
+            if not user or not bcrypt.checkpw(input_password, hashed_password):
+                flash('Credenciais incorretas.', 'error')
+                return render_template('login.html')
+
+            # --- autenticação bem-sucedida ---
+            session['user_id'] = user.id
+            session['user'] = {
+                "id": user.id,
+                "username": user.username,
+                "email": user.email,
+                "role": user.role,
+                "created_at": user.created_at
+            }
+
+            flash(f'Bem-vindo(a), {user.username}!', 'success')
+            return redirect(url_for('get_books'))
+
+        except Exception as e:
+            logger.exception(f'Erro ao fazer login: {e}')
+            flash('Erro inesperado ao tentar fazer login.', 'error')
+            return render_template('login.html')
     
     @app.route('/logout')
     def logout():
-        session.clear()  # limpa todos os dados da sessão
-        return redirect(url_for('login'))
+        session.clear()
+        return redirect(request.referrer or url_for('index'))

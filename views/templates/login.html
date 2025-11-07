@@ -5,15 +5,25 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login | LitScore</title>
-  <link rel="stylesheet" href="../static/css/colors.css" />
+  <link rel="stylesheet" href="../static/css/style.css" />
   <link rel="stylesheet" href="../static/css/auth.css" />
   <link rel="stylesheet" href="../static/css/forms.css" />
 </head>
 
 <body>
+  {% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+      <div id="flash-messages" class="no-header">
+        {% for category, message in messages %}
+          <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
   <div class="login-page">
     <div class="login-illustration">
-      <a href="./index.html" class="logo">
+      <a href="{{ url_for('index') }}" class="logo">
         <img src="../static/images/logo.svg" alt="LitScore logo">
         <span>LitScore</span>
       </a>
@@ -23,22 +33,22 @@
       <div class="form-content">
         <h2>Bem-vindo de volta!</h2>
         <p class="form-subtitle">Que bom te ver por aqui novamente.</p>
-        <form>
+        <form action="{{ url_for('login') }}" method="POST">
           <div class="input-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" placeholder="Digite seu email">
+            <label for="email_username">Email ou nome de usuário</label>
+            <input type="text" name="email_username" id="email_username" placeholder="Digite seu email ou nome de usuário">
           </div>
           <div class="input-group">
             <label for="password">Senha</label>
-            <input type="password" id="password" placeholder="Digite sua senha">
+            <input type="password" name="password" id="password" placeholder="Digite sua senha">
           </div>
           <button type="submit">Entrar</button>
-          <p class="register-text">Não tem uma conta? <a href="./register.html">Cadastre-se</a></p>
+          <p class="register-text">Não tem uma conta? <a href="{{ url_for('register') }}">Cadastre-se</a></p>
         </form>
       </div>
     </div>
   </div>
-
+  <script src="../static/js/flash-message.js"></script>
 </body>
 
 </html>

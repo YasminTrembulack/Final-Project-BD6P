@@ -1,106 +1,86 @@
 .hero {
-  background: url("https://images.unsplash.com/photo-1529473814998-077b4fec6770?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170")
+  background: url("https://images.unsplash.com/photo-1677462998866-016888650693?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170")
     center/cover no-repeat;
 }
 
 /* --- SEÇÃO DE LIVROS --- */
-.books {
+.users {
   background-color: var(--neutral-050);
   padding: 60px 10%;
   text-align: center;
 }
 
-/* GRID DE LIVROS */
-.books-grid {
+/* GRID DE USUÁRIOS */
+.users-grid {
   display: grid;
-  grid-template-columns: repeat(4, 220px);
+  grid-template-columns: repeat(3, 1fr); /* 3 colunas fixas */
   gap: 40px;
   justify-content: center;
-  align-content: start; /* mantém o grid alinhado ao topo */
-  max-width: 1200px;
+  align-content: start;
+  max-width: 1000px;
   margin: 0 auto;
 }
 
-/* CARD DE LIVRO */
-.book-card {
+/* CARD DE USUÁRIO */
+.user-card {
   position: relative;
   background-color: var(--neutral-000);
-  border-radius: 12px;
+  border-radius: 16px;
   box-shadow: 0 5px 20px var(--shadow-100);
   overflow: hidden;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-
-  /* --- TAMANHO FIXO --- */
-  width: 220px; /* Largura consistente */
-  height: 360px; /* Altura consistente */
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-}
-
-.empty-card {
-  background-color: var(--neutral-100);
-  border: 2px dashed var(--neutral-200);
-  display: flex;
   align-items: center;
-  justify-content: center;
-  height: 360px;
-  width: 220px;
-  border-radius: 12px;
-  box-shadow: none;
-  cursor: default;
-}
-
-.book-card:not(.empty-card):hover {
-  transform: translateY(-8px);
-  box-shadow: 0 10px 25px var(--shadow-200);
-}
-
-/* CAPA DO LIVRO */
-.book-card img {
-  width: 100%;
-  height: 280px; /* Altura fixa da capa */
-  object-fit: cover; /* Mantém proporção e corta o excesso */
-  flex-shrink: 0;
-  transition: transform 0.4s ease;
+  padding: 25px;
   cursor: pointer;
 }
 
-.book-card:hover img {
-  transform: scale(1.05);
+.user-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 25px var(--shadow-200);
 }
 
-/* INFORMAÇÕES DO LIVRO */
-.book-info {
-  padding: 15px;
-  text-align: center;
+/* AVATAR */
+.user-avatar img {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 18px;
+  border: 3px solid var(--brand-300);
 }
 
-.book-info h3 {
+/* INFORMAÇÕES DO USUÁRIO */
+.user-info h3 {
   font-family: var(--font-title);
-  font-size: 1.1rem;
   color: var(--neutral-800);
+  font-size: 1.1rem;
   margin-bottom: 6px;
-  line-height: 1.3;
-  cursor: default;
-  overflow: hidden;
-  display: -webkit-box;
-  display: box;
-  -webkit-box-orient: vertical;
-  box-orient: vertical;
-  -webkit-line-clamp: 1;
-  line-clamp: 1;
 }
 
-.book-info p {
-  font-family: var(--font-primary);
-  color: var(--brand-700);
-  font-weight: 500;
+.user-email {
   font-size: 0.9rem;
+  color: var(--neutral-600);
+  margin-bottom: 8px;
+  word-break: break-all;
 }
 
-.book-card-link{
-  text-decoration: none;
+.user-role {
+  background-color: var(--brand-100);
+  color: var(--brand-700);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 12px;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+.user-created {
+  font-size: 0.8rem;
+  color: var(--neutral-500);
+  margin-top: auto; /* fixa no final do card */
 }
 
 /* --- BARRA DE PESQUISA E FILTROS --- */
@@ -155,7 +135,7 @@
 }
 
 /* INPUT DE BUSCA */
-.book-search {
+.user-search {
   height: 45px;
   width: 280px;
   border: 1px solid var(--neutral-300);
@@ -169,7 +149,7 @@
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.book-search:focus {
+.user-search:focus {
   border-color: var(--brand-400);
   box-shadow: 0 4px 12px var(--shadow-200);
 }
@@ -300,12 +280,8 @@
   padding: 20px;
 }
 
-.modal-overlay.active {
-  display: flex;
-}
 
-
-.book-actions{
+.user-actions{
   position: absolute;
   z-index: 3;
   width: 100%;
@@ -316,9 +292,6 @@
   top: 10px;
 }
 
-
-
-.edit-review,
 .delete-review {
   font-size: 0.75rem;
   text-decoration: none;
@@ -326,17 +299,6 @@
   border-radius: 6px;
   transition: all 0.2s ease;
   font-weight: 500;
-}
-
-/* Azul pastel — Editar */
-.edit-review {
-  color: #3b82f6; /* azul pastel médio */
-  background-color: #e0f0ff; /* azul bem clarinho */
-}
-
-.edit-review:hover {
-  background-color: #cde5ff; /* hover suave */
-  color: #2563eb; /* azul mais forte */
 }
 
 /* Vermelho pastel — Excluir */
@@ -349,8 +311,6 @@
   background-color: #ffd0d0; /* hover suave */
   color: #dc2626; /* vermelho mais forte */
 }
-
-
 
 /* --- RESPONSIVO --- */
 @media (max-width: 900px) {

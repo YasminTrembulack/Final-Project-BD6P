@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Usuários | LitScore</title>
+    <link rel="stylesheet" href="../static/css/style.css" />
+    <link rel="stylesheet" href="../static/css/header.css" />
+    <link rel="stylesheet" href="../static/css/hero.css" />
+    <link rel="stylesheet" href="../static/css/users.css" />
+    <link rel="stylesheet" href="../static/css/forms.css" />
+</head>
+
+<body>
+    {% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+    <div id="flash-messages" class="header-space">
+        {% for category, message in messages %}
+        <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="logo">
+            <img src="../static/images/logo.svg" alt="LitScore Logo" class="logo-img" />
+            <span>LitScore</span>
+        </div>
+
+        <nav class="nav">
+            <a href="{{ url_for('index') }}">Sobre nós</a>
+            <a href="{{ url_for('get_books') }}">Livros</a>
+            <a href="{{ url_for('contact') }}">Contato</a>
+            {% if logged_user and logged_user.role == 'admin'%}
+            <a href="#">Usuários</a>
+            {% endif %}
+            <!-- MENU DE PERFIL -->
+            {% if logged_user %}
+            <div class="profile-menu" id="profileMenu">
+                <div class="profile-info" id="profileTrigger">
+                    <div class="profile-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="22" height="22">
+                            <path
+                                d="M12 12c2.67 0 8 1.34 8 4v4H4v-4c0-2.66 5.33-4 8-4zm0-2a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" />
+                        </svg>
+                    </div>
+                    <span class="username">{{ logged_user.username }}</span>
+                    <svg class="arrow-down" xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24"
+                        width="18" height="18">
+                        <path d="M7 10l5 5 5-5H7z" />
+                    </svg>
+                </div>
+
+                <ul class="profile-dropdown" id="profileDropdown">
+                    <li><a href="{{ url_for('get_user', user_id=logged_user.id) }}">Meu perfil</a></li>
+                    
+                    <li><a href="{{ url_for('logout') }}">Sair</a></li>
+                </ul>
+            </div>
+            {% else %}
+            <a href="{{ url_for('login') }}" class="btn-login">Entrar</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    {% if logged_user and logged_user.role == 'admin'%}
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Usuários</h1>
+            <p>Compartilhe suas opiniões com outros apaixonados por leitura.</p>
+        </div>
+    </section>
+
+    <section class="users">
+
+        <div class="search-bar">
+            <select class="filter-select">
+                <option value="name" selected>Nome</option>
+                <option value="email">E-mail</option>
+                <option value="role">Função</option>
+            </select>
+
+            <div class="search-container">
+                <input type="text" class="user-search" placeholder="Buscar usuário..." />
+                <button class="search-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path
+                            d="M10 2a8 8 0 015.293 13.707l4.5 4.5-1.414 1.414-4.5-4.5A8 8 0 1110 2zm0 2a6 6 0 100 12 6 6 0 000-12z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="users-grid">
+            {% for user in users %}
+            <div class="user-card">
+                <div class="user-actions">
+                    <a href="{{ url_for('delete_user', user_id=user.id )}}" class="delete-review">Deletar</a>
+                </div>
+                <div class="user-avatar">
+                    <img src="{{ user.avatar_url or 'https://cdn-icons-png.flaticon.com/512/149/149071.png' }}" alt="Avatar do Usuário">
+                </div>
+                <div class="user-info">
+                    <h3>{{ user.username }}</h3>
+                    <p class="user-email">{{ user.email }}</p>
+                    <p class="user-role">
+                        {{ 'Administrador' if user.role == 'admin' else 'Usuário' }}
+                    </p>
+                    <p class="user-created">Membro desde {{ user.created_at.strftime('%d/%m/%Y') }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="pagination">
+            {# Botão Anterior #}
+            <a 
+                class="page-btn prev {% if not pagination_info.has_prev %}disabled{% endif %}"
+                href="{% if pagination_info.has_prev %}{{ url_for('get_books', page=pagination_info.page - 1) }}{% else %}#{% endif %}"
+            >‹</a>
+
+            {% if start_page > 1 %}
+                <a class="page-btn" href="{{ url_for('get_books', page=1) }}">1</a>
+                {% if start_page > 2 %}
+                    <span class="page-dots">...</span>
+                {% endif %}
+            {% endif %}
+
+            {% for num in range(start_page, end_page + 1) %}
+                <a 
+                    href="{{ url_for('get_books', page=num) }}"
+                    class="page-btn {% if num == pagination_info.page %}active{% endif %}"
+                >{{ num }}</a>
+            {% endfor %}
+
+            {% if end_page < pagination_info.total_pages %} {% if end_page < pagination_info.total_pages - 1 %} 
+                <span class="page-dots">...</span>
+                {% endif %}
+                    <a class="page-btn" href="{{ url_for('get_books', page=pagination_info.total_pages) }}">
+                        {{ pagination_info.total_pages }}
+                    </a>
+                {% endif %}
+
+                {# Botão Próximo #}
+                <a 
+                    class="page-btn next {% if not pagination_info.has_next %}disabled{% endif %}"
+                    href="{% if pagination_info.has_next %}{{ url_for('get_books', page=pagination_info.page + 1) }}{% else %}#{% endif %}"
+                >›</a>
+        </div>
+
+    </section>
+    {% else %}
+    <div class="empty-page">
+        <div class="login-box">
+            <h2>Você precisa estar logado</h2>
+            <p>Acesse sua conta para visualizar os usuários cadastrados, caso você seja um administrador.</p>
+            <div class="login-actions">
+                <a href="{{ url_for('login') }}" class="btn-login">Entrar</a>
+                <a href="{{ url_for('register') }}" class="btn-register">Criar conta</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+
+
+
+
+
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <p>© 2025 LitScore — Todos os direitos reservados.</p>
+    </footer>
+    <script src="../static/js/profile-dropdown.js"></script>
+    <script src="../static/js/modal-close-open.js"></script>
+    <script src="../static/js/flash-message.js"></script>
+</body>
+
+</html>

@@ -11,6 +11,7 @@
   padding: 15px 40px;
   box-shadow: 0 5px 20px var(--shadow-200);
   z-index: 100;
+  height: 10vh;
 }
 
 /* LOGO COM SOMBRA */
@@ -96,9 +97,12 @@
 
 /* FOOTER */
 .footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background-color: var(--neutral-900);
   text-align: center;
-  padding: 25px 20px;
+  min-height: 10vh;
   color: var(--neutral-400);
   font-size: 0.9rem;
   box-shadow: 0 -2px 8px var(--shadow-300);

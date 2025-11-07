@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meu Perfil | LitScore</title>
+  <link rel="stylesheet" href="../static/css/style.css" />
+  <link rel="stylesheet" href="../static/css/header.css" />
+  <link rel="stylesheet" href="../static/css/hero.css" />
+  <link rel="stylesheet" href="../static/css/forms.css" />
+  <link rel="stylesheet" href="../static/css/profile.css" />
+</head>
+
+<body>
+  {% with messages = get_flashed_messages(with_categories=True) %}
+  {% if messages %}
+  <div id="flash-messages" class="header-space">
+    {% for category, message in messages %}
+    <div class="flash {{ category }}">{{ message }}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% endwith %}
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="logo">
+      <img src="../static/images/logo.svg" alt="LitScore Logo" class="logo-img" />
+      <span>LitScore</span>
+    </div>
+
+    <nav class="nav">
+      <a href="{{ url_for('index') }}">Sobre nós</a>
+      <a href="{{ url_for('get_books') }}">Livros</a>
+      <a href="{{ url_for('contact') }}">Contato</a>
+      {% if logged_user and logged_user.role == 'admin' %}
+      <a href="{{ url_for('get_users') }}">Usuários</a>
+      {% endif %}
+
+      <!-- MENU DE PERFIL -->
+      {% if logged_user %}
+      <div class="profile-menu" id="profileMenu">
+        <div class="profile-info" id="profileTrigger">
+          <div class="profile-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="22" height="22">
+              <path
+                d="M12 12c2.67 0 8 1.34 8 4v4H4v-4c0-2.66 5.33-4 8-4zm0-2a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" />
+            </svg>
+          </div>
+          <span class="username">{{ logged_user.username }}</span>
+          <svg class="arrow-down" xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" width="18"
+            height="18">
+            <path d="M7 10l5 5 5-5H7z" />
+          </svg>
+        </div>
+
+        <ul class="profile-dropdown" id="profileDropdown">
+          <li><a href="{{ url_for('get_user', user_id=logged_user.id) }}">Meu perfil</a></li>
+          <li><a href="{{ url_for('logout') }}">Sair</a></li>
+        </ul>
+      </div>
+      {% else %}
+      <a href="{{ url_for('login') }}" class="btn-login">Entrar</a>
+      {% endif %}
+    </nav>
+  </header>
+
+  {% if logged_user %}
+      <!-- HERO -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Meu Perfil</h1>
+            <p>Gerencie suas informações e preferências.</p>
+        </div>
+    </section>
+
+  <!-- PROFILE CONTENT -->
+  <section class="profile-section">
+    <div class="profile-card">
+      <div class="avatar-section">
+        <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+          alt="Avatar do usuário" class="profile-avatar" />
+        <h2>{{ logged_user.username }}</h2>
+        <p class="email">{{ logged_user.email }}</p>
+        <p class="role">
+          {{ 'Administrador' if logged_user.role == 'admin' else 'Usuário' }}
+        </p>
+        <p class="created">Membro desde {{ logged_user.created_at.strftime('%d/%m/%Y') }}</p>
+      </div>
+
+      <div class="edit-section">
+        <h3>Editar Informações</h3>
+        <form action="{{ url_for('update_user', user_id=logged_user.id) }}" method="POST" enctype="multipart/form-data">
+          <div class="form-grid">
+            <div class="input-group">
+              <label for="username">Nome de Usuário</label>
+              <input type="text" name="username" id="username" value="{{ logged_user.username }}" required>
+            </div>
+
+            <div class="input-group">
+              <label for="email">E-mail</label>
+              <input type="email" name="email" id="email" value="{{ logged_user.email }}" required>
+            </div>
+
+            <div class="input-group">
+              <label for="password">Nova Senha</label>
+              <input type="password" name="password" id="password" placeholder="Deixe em branco para não alterar">
+            </div>
+
+            <div class="input-group">
+              <label for="confirm-password">Confirmação da Nova Senha</label>
+              <input type="password" name="confirm-password" id="confirm-password" placeholder="...">
+            </div>
+
+            <input type="hidden" name="role" value="{{ logged_user.role }}">
+            <input type="hidden" name="created_at" value="{{ logged_user.created_at }}">
+
+          </div>
+          <button type="submit" class="save-btn">Salvar Alterações</button>
+
+        </form>
+      </div>
+    </div>
+  </section>
+      {% else %}
+    <div class="empty-page">
+        <div class="login-box">
+            <h2>Você precisa estar logado</h2>
+            <p>Entre na sua conta para visualizar o seu perfil.</p>
+            <div class="login-actions">
+                <a href="{{ url_for('login') }}" class="btn-login">Entrar</a>
+                <a href="{{ url_for('register') }}" class="btn-register">Criar conta</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+  <footer class="footer">
+    <p>© 2025 LitScore — Todos os direitos reservados.</p>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/profile-dropdown.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/flash-message.js') }}"></script>
+</body>
+</html>

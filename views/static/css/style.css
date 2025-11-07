@@ -1,0 +1,241 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Playfair+Display:wght@400;600;700&display=swap');
+
+:root {
+  /* ✍️ FONTES */
+  --font-primary: 'Poppins', sans-serif;         /* texto padrão e botões */
+  --font-title: 'Playfair Display', serif;       /* títulos e logo */
+
+  /* 🎨 CORES DE MARCA */
+  --brand-100: #fff3e0;   /* Laranja muito claro */
+  --brand-200: #ffe0b2;  
+  --brand-300: #ffcc80;  
+  --brand-400: #ffb74d;  
+  --brand-500: #ff9800;   /* Laranja médio */
+  --brand-600: #fb8c00;  
+  --brand-700: #f57c00;  
+  --brand-800: #ef6c00;  
+  --brand-900: #e65100;   /* Laranja profundo */
+
+  /* ⚙️ ESCALA DE NEUTROS */
+  --neutral-000: #ffffff;  /* Branco puro */
+  --neutral-050: #fcfcfd;  /* Quase branco */
+  --neutral-100: #f8f9fb;  /* Fundo claro padrão */
+  --neutral-150: #f2f3f5;  
+  --neutral-200: #ebecee;  
+  --neutral-250: #e5e6e8;  
+  --neutral-300: #dedfe1;  
+  --neutral-350: #d5d6d8;  
+  --neutral-400: #cccccc;  /* Bordas suaves */
+  --neutral-450: #b3b3b3;  
+  --neutral-500: #999999;  /* Texto secundário */
+  --neutral-550: #808080;  
+  --neutral-600: #666666;  /* Texto neutro */
+  --neutral-650: #555555;  
+  --neutral-700: #444444;  /* Texto forte */
+  --neutral-750: #383838;  
+  --neutral-800: #2c2c2c;  /* Fundo escuro */
+  --neutral-850: #242424;  
+  --neutral-900: #1f1f1f;  /* Fundo profundo */
+  --neutral-950: #181818;  
+  --neutral-1000: #121212; /* Base do dark mode */
+  --neutral-1100: #0e0e0e;
+  --neutral-1200: #0a0a0a;
+  --neutral-1300: #080808;
+  --neutral-1400: #000000; /* Preto absoluto */
+  
+  /* ✨ EFEITOS E SOMBRAS */
+  --shadow-000: rgba(0, 0, 0, 0);
+  --shadow-100: rgba(0, 0, 0, 0.10);
+  --shadow-200: rgba(0, 0, 0, 0.15);
+  --shadow-300: rgba(0, 0, 0, 0.25);
+  --shadow-400: rgba(0, 0, 0, 0.45);
+  --shadow-500: rgba(0, 0, 0, 0.70);
+  --shadow-600: rgba(0, 0, 0, 0.80);
+  --shadow-700: rgba(0, 0, 0, 0.90);
+}
+
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--neutral-150);
+  color: var(--neutral-900);
+  line-height: 1.6;
+}
+
+/* ANIMAÇÃO */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 🎨 Container principal */
+#flash-messages {
+  position: fixed;
+  /* top: 85px;
+  right: 20px; */
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: auto;
+}
+
+#flash-messages.header-space {
+  top: 85px;
+  right: 20px;
+}
+
+/* Quando NÃO há header fixo */
+#flash-messages.no-header {
+  top: 20px;
+  right: 20px;
+}
+
+/* 💬 Estilo base das mensagens */
+.flash {
+  padding: 14px 18px;
+  border-radius: 10px;
+  font-family: var(--font-primary, 'Poppins', sans-serif);
+  font-weight: 500;
+  font-size: 0.95rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  animation: slideIn 0.4s ease forwards;
+  opacity: 0.95;
+  transition: opacity 0.3s ease;
+}
+
+/* 🌈 Cores por categoria */
+.flash.success {
+  background-color: #d4edda;
+  color: #155724;
+  border-left: 5px solid #28a745;
+}
+
+.flash.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border-left: 5px solid #dc3545;
+}
+
+.flash.warning {
+  background-color: #fff3cd;
+  color: #856404;
+  border-left: 5px solid #ffc107;
+}
+
+.flash.info {
+  background-color: #d1ecf1;
+  color: #0c5460;
+  border-left: 5px solid #17a2b8;
+}
+
+/* 🧭 Hover */
+.flash:hover {
+  opacity: 1;
+}
+
+/* ✨ Animação de entrada */
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* ✨ Animação de saída */
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+/* Classe para aplicar a animação de saída */
+.flash.hide {
+  animation: slideOut 0.4s ease forwards;
+}
+
+
+.empty-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 90vh;
+  background: var(--neutral-050, #f9f9f9);
+}
+
+/* Caixa de mensagem */
+.login-box {
+  background: var(--neutral-000, #fff);
+  padding: 40px 50px;
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  max-width: 480px;
+}
+
+/* Título */
+.login-box h2 {
+  font-size: 1.6rem;
+  color: var(--text-900, #333);
+  margin-bottom: 10px;
+}
+
+/* Texto */
+.login-box p {
+  font-size: 1rem;
+  color: var(--text-600, #555);
+  margin-bottom: 25px;
+}
+
+/* Botões */
+.login-actions {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.btn-login,
+.btn-register {
+  text-decoration: none;
+}
+
+.btn-register {
+  background-color: var(--brand-800);
+  color: var(--neutral-000);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  margin-left: 15px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px var(--shadow-300);
+  border: none;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.btn-register:hover {
+  background-color: var(--brand-700);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px var(--shadow-300);
+}

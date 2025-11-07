@@ -7,11 +7,11 @@ from mysql.connector import connect, Error
 
 from config import db_config
 
-@dataclass
+@dataclass(kw_only=True)
 class BaseEntity:
     id: str = field(default_factory=lambda: str(uuid4()))
-    created_at: datetime = field(default_factory=datetime.now(timezone.utc))
-    updated_at: datetime = field(default_factory=datetime.now(timezone.utc))
+    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
 
 
 @contextmanager
