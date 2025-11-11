@@ -40,14 +40,15 @@ def configure_routes(app: Flask):
                 return render_template('login.html')
 
             # --- autenticação bem-sucedida ---
-            session['user_id'] = user.id
             session['user'] = {
                 "id": user.id,
                 "username": user.username,
-                "email": user.email,
                 "role": user.role,
-                "created_at": user.created_at
+                # "email": user.email,
+                # "created_at": user.created_at,
             }
+
+            session.permanent = True
 
             flash(f'Bem-vindo(a), {user.username}!', 'success')
             return redirect(url_for('get_books'))

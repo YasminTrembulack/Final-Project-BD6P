@@ -53,9 +53,15 @@ def configure_routes(app: Flask):
     @app.route('/get_user/<user_id>', methods=['GET'])
     def get_user(user_id):
         """
-        Exibe o perfil de um usuário específico (ainda sem detalhes carregados).
+        Exibe o perfil de um usuário específico.
         """
-        return render_template('profile.html', logged_user=session.get('user'))
+        user = User.get_user_by_field('id', user_id)
+
+        return render_template(
+            'profile.html',
+            user=user,
+            logged_user=session.get('user'), 
+        )
 
 
     # ==========================================================

@@ -66,8 +66,8 @@
     </nav>
   </header>
 
-  {% if logged_user %}
-      <!-- HERO -->
+  {% if logged_user.id == user.id %}
+    <!-- HERO -->
     <section class="hero">
         <div class="hero-content">
             <h1>Meu Perfil</h1>
@@ -75,33 +75,42 @@
         </div>
     </section>
 
-  <!-- PROFILE CONTENT -->
-  <section class="profile-section">
-    <div class="profile-card">
-      <div class="avatar-section">
-        <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
-          alt="Avatar do usuário" class="profile-avatar" />
-          <a class="edit-btn" href="{{ url_for('update_user', user_id=logged_user.id)}}">Editar Perfil</a>
+    <!-- PROFILE CONTENT -->
+    <section class="profile-section">
+      <div class="profile-card">
+        <div class="avatar-section">
+          <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+            alt="Avatar do usuário" class="profile-avatar" />
+            {% if logged_user.id == user.id %}
+            <a class="edit-btn" href="{{ url_for('update_user', user_id=user.id)}}">Editar Perfil</a>
+            {% endif %}
+          </div>
+          <div class="profile-content">
+            <h2>{{ user.username }}</h2>
+            <p class="email">{{ user.email }}</p>
+            <p class="role">
+              {{ 'Administrador' if user.role == 'admin' else 'Usuário' }}
+            </p>
+            <p class="created">Membro desde {{ user.created_at.strftime('%d/%m/%Y') }}</p>
         </div>
-        <div class="profile-content">
-          <h2>{{ logged_user.username }}</h2>
-          <p class="email">{{ logged_user.email }}</p>
-          <p class="role">
-            {{ 'Administrador' if logged_user.role == 'admin' else 'Usuário' }}
-          </p>
-          <p class="created">Membro desde {{ logged_user.created_at.strftime('%d/%m/%Y') }}</p>
       </div>
-    </div>
-  </section>
-      {% else %}
+    </section>
+    {% else %}
     <div class="empty-page">
         <div class="login-box">
+            {% if logged_user and logged_user.id != user.id %}
+            <h2>🚫 Acesso bloquedo</h2>
+            <p>Você não pode acessar o perfil de outro usuário.</p><div class="login-actions">
+              <a class="btn-register" href="{{ url_for('get_user', user_id=logged_user.id) }}">Acessar meu perfil!</a>
+            </div>
+            {% elif not logged_user %}
             <h2>Você precisa estar logado</h2>
             <p>Entre na sua conta para visualizar o seu perfil.</p>
             <div class="login-actions">
                 <a href="{{ url_for('login') }}" class="btn-login">Entrar</a>
                 <a href="{{ url_for('create_user') }}" class="btn-register">Criar conta</a>
             </div>
+            {% endif %}
         </div>
     </div>
     {% endif %}
