@@ -35,14 +35,14 @@
         <h2>{% if user %}Editar perfil{% else %}Crie sua conta{% endif %}</h2>
         <p class="form-subtitle">
           {% if user %}
-          Atualize as informações do seu perfil abaixo.
+          Atualize as informações do seu perfil.
           {% else %}
           Comece sua jornada literária.
           {% endif %}
         </p>
 
         <form action=""
-          action="{% if user %}{{ url_for('update_user', user_id=user.id) }}{% else %}{{ url_for('register') }}{% endif %}"
+          action="{% if user %}{{ url_for('update_user', user_id=user.id) }}{% else %}{{ url_for('create_user') }}{% endif %}"
           method="POST">
           <div class="input-group">
             <label for="username">Nome de usuários</label>
@@ -68,25 +68,25 @@
             <input type="password" name="confirm-password" id="confirm-password" placeholder="Confirme sua senha"
               {% if not user %}required{% endif %} />
           </div>
-          {% if user %}
-
-          <div class="input-group">
-            <label for="role">Role</label>
-            <select name="role" id="role">
-              <option value="user" {% if user and user.role=='user' %}selected{% endif %}>Usuário Comum</option>
-              {% if  user.role == 'admin' %}
-                <option value="admin" {% if user and user.role=='admin' %}selected{% endif %}>Administrador</option>
-              {% endif %}
-            </select>
-          </div>
-
-          {% endif %}
+          <!-- {% if user %}
+            <div class="input-group">
+              <label for="role">Role</label>
+              <select name="role" id="role">
+                <option value="user" {% if user and user.role=='user' %}selected{% endif %}>Usuário Comum</option>
+                {% if  user.role == 'admin' %}
+                  <option value="admin" {% if user and user.role=='admin' %}selected{% endif %}>Administrador</option>
+                {% endif %}
+              </select>
+            </div>
+          {% endif %} -->
 
           <button type="submit">{% if user %}Atualizar{% else %}Cadastrar{% endif %}</button>
+          {% if not user %}
           <p class="register-text">
             Já tem uma conta?
             <a href="{{ url_for('login') }}">Entrar</a>
           </p>
+          {% endif %}
         </form>
       </div>
     </div>

@@ -74,6 +74,7 @@
   border-radius: 12px;
   font-size: 1rem;
   transition: all 0.3s ease;
+  resize: none;
 }
 
 .input-group input:focus,

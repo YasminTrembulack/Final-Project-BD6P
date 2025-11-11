@@ -27,11 +27,15 @@ def configure_routes(app: Flask):
                 or User.get_user_by_field('username', email_username)
             )
 
+            # --- valida senha ---
+            if not user:
+                flash('Credenciais incorretas.', 'error')
+                return render_template('login.html')
+
             hashed_password = user.password.encode('utf-8')
             input_password = password.encode('utf-8')
 
-            # --- valida senha ---
-            if not user or not bcrypt.checkpw(input_password, hashed_password):
+            if not bcrypt.checkpw(input_password, hashed_password):
                 flash('Credenciais incorretas.', 'error')
                 return render_template('login.html')
 
