@@ -4,10 +4,11 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Detalhes do Livro | LitScore</title>
+    <title>{% if book_to_update %}Editar Review | LitScore{% else %}Adicionar Review | LitScore{% endif %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/forms.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/upsert-review.css') }}" />
 </head>
 
 <body>
@@ -24,7 +25,7 @@
     <!-- HEADER -->
     <header class="header">
         <div class="logo">
-            <img src="../static/images/logo.svg" alt="LitScore Logo" class="logo-img" />
+            <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="LitScore Logo" class="logo-img" />
             <span>LitScore</span>
         </div>
         <nav class="nav">
@@ -68,19 +69,26 @@
     {% if logged_user %}
 
     <!-- MODAL -->
-    <div id="Modal" class="modal active">
+    <div class="review">
         <div class="form-content comment-form">
             <h2>{% if review_to_update %}Atualizar Comentário{% else %}Adicionar Comentário{% endif %}</h2>
-            <p class="form-subtitle">Compartilhe sua opinião sobre este livro.</p>
+            <p class="form-subtitle">
+                {% if book_to_update %}
+                Atualize as informações do comentário abaixo.
+                {% else %}
+                Compartilhe sua opinião sobre este livro.
+                {% endif %}
+            </p>
 
             <form
-                action="{% if review_to_update %}{{ url_for('update_review', review_id=review_to_update.id) }}{% else %}{{ url_for('create_review') }}{% endif %}"
+                action="{% if review_to_update %}{{ url_for('update_review', review_id=review_to_update.id) }}{% else %}{{ url_for('create_review', book_id=book_id) }}{% endif %}"
                 method="POST">
                 <!-- Avaliação em estrelas -->
-                <input type="hidden" name="book_id"
-                    value="{% if review_to_update %}{{ review_to_update.book_id }}{% else %}{{ book.id }}{% endif %}">
+
                 <input type="hidden" name="rating" id="ratingValue"
                     value="{% if review_to_update %}{{ review_to_update.rating }}{% else %}1{% endif %}">
+
+                <input type="hidden" name="book_id" value="{% if review_to_update %}{{ book_id }}{% endif %}">
 
                 <div class="input-group">
                     <label>Avaliação</label>
@@ -101,11 +109,11 @@
                 <!-- Comentário -->
                 <div class="input-group">
                     <label for="reviewText">Comentário</label>
-                    <textarea id="reviewText" name="comment" rows="8" placeholder="Escreva seu comentário..."
+                    <textarea id="reviewText" name="comment" rows="5" placeholder="Escreva seu comentário..."
                         required>{{ review_to_update.comment if review_to_update else '' }}</textarea>
                 </div>
 
-                <button type="submit">Enviar Comentário</button>
+                <button type="submit">{% if review_to_update %}Salvar Alterações{% else %}Enviar Comentário{% endif %}</button>
             </form>
 
         </div>
@@ -116,7 +124,7 @@
     <div class="empty-page">
         <div class="login-box">
             <h2>Você precisa estar logado</h2>
-            <p>Entre na sua conta para visualizar os detalhes do livro, favoritar e deixar um comentário.</p>
+            <p>Entre na sua conta para editar ou criar comentário.</p>
             <div class="login-actions">
                 <a href="{{ url_for('login') }}" class="btn-login">Entrar</a>
                 <a href="{{ url_for('register') }}" class="btn-register">Criar conta</a>
@@ -131,7 +139,6 @@
     </footer>
 
     <script src="{{ url_for('static', filename='js/profile-dropdown.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/modal-close-open.js') }}"></script>
     <script src="{{ url_for('static', filename='js/flash-message.js') }}"></script>
     <script src="{{ url_for('static', filename='js/star-rating.js') }}"></script>
 

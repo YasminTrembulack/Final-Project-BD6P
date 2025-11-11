@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% if book_to_update %}Editar Livro | LitScore{% else %}Adicionar Livro | LitScore{% endif %}</title>
+    <link rel="stylesheet" href="../static/css/style.css" />
+    <link rel="stylesheet" href="../static/css/header.css" />
+    <link rel="stylesheet" href="../static/css/hero.css" />
+    <link rel="stylesheet" href="../static/css/forms.css" />
+    <link rel="stylesheet" href="../static/css/upsert-book.css" />
+</head>
+
+<body>
+    {% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+    <div id="flash-messages" class="header-space">
+        {% for category, message in messages %}
+        <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="logo">
+            <img src="../static/images/logo.svg" alt="LitScore Logo" class="logo-img" />
+            <span>LitScore</span>
+        </div>
+
+        <nav class="nav">
+            <a href="{{ url_for('index') }}">Sobre nós</a>
+            <a href="#">Livros</a>
+            <a href="{{ url_for('contact') }}">Contato</a>
+            {% if logged_user and logged_user.role == 'admin'%}
+            <a href="{{ url_for('get_users') }}">Usuários</a>
+            {% endif %}
+
+            <!-- MENU DE PERFIL -->
+            {% if logged_user %}
+            <div class="profile-menu" id="profileMenu">
+                <div class="profile-info" id="profileTrigger">
+                    <div class="profile-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="22" height="22">
+                            <path
+                                d="M12 12c2.67 0 8 1.34 8 4v4H4v-4c0-2.66 5.33-4 8-4zm0-2a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" />
+                        </svg>
+                    </div>
+                    <span class="username">{{ logged_user.username }}</span>
+                    <svg class="arrow-down" xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24"
+                        width="18" height="18">
+                        <path d="M7 10l5 5 5-5H7z" />
+                    </svg>
+                </div>
+
+                <ul class="profile-dropdown" id="profileDropdown">
+                    <li><a href="{{ url_for('get_user', user_id=logged_user.id) }}">Meu perfil</a></li>
+
+                    <li><a href="{{ url_for('logout') }}">Sair</a></li>
+                </ul>
+            </div>
+            {% else %}
+            <a href="{{ url_for('login') }}" class="btn-login">Entrar</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    {% if logged_user %}
+    <div class="book">
+        <div class="form-content book-layout">
+            <!-- 📕 Pré-visualização da capa -->
+            <form class="form-book"
+                action="{% if book_to_update %}{{ url_for('update_book', book_id=book_to_update.id) }}{% else %}{{ url_for('create_book') }}{% endif %}"
+                method="POST" enctype="multipart/form-data">
+            <div class="cover-preview">
+                <label for="cover" class="cover-label">
+                    {% if book_to_update and book_to_update.img_link and book_to_update.img_link.startswith('cover_uploads/')%}
+                    <img id="coverImagePreview" src="{{ url_for('static', filename=book_to_update.img_link ) }}   " alt="Capa do Livro">
+                    {% elif book_to_update and book_to_update.img_link %}
+                    <img id="coverImagePreview" src="{{ book_to_update.img_link }}" alt="Capa do Livro">
+                    {% else %}
+                    <img id="coverImagePreview" src="{{ 'https://plus.unsplash.com/premium_photo-1675738775295-dffbbd2e6f34?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=687' }}"
+                        alt="Capa do Livro">
+                    {% endif %}
+                </label>
+
+                <!-- input oculto -->
+                <input type="file" name="cover" id="cover" accept="image/*" hidden />
+            </div>
+
+            <!-- 📘 Formulário -->
+            <div class="form-fields">
+                <h2>
+                    {% if book_to_update %}Editar Livro{% else %}Adicionar Novo Livro{% endif %}
+                </h2>
+                <p class="form-subtitle">
+                    {% if book_to_update %}
+                    Atualize as informações do livro abaixo.
+                    {% else %}
+                    Preencha as informações para adicionar um novo livro.
+                    {% endif %}
+                </p>
+                
+
+                    <div class="form-grid">
+                        <div class="input-group">
+                            <label for="book-title">Título<span class="required">*</span></label>
+                            <input type="text" value="{{ book_to_update.title if book_to_update else '' }}" name="title"
+                                id="book-title" placeholder="Digite o título do livro">
+                        </div>
+                        <div class="input-group">
+                            <label for="book-author">Autor<span class="required">*</span></label>
+                            <input type="text" name="author"
+                                value="{{ book_to_update.author if book_to_update else '' }}" id="book-author"
+                                placeholder="Digite o nome do autor">
+                        </div>
+                        <div class="input-group">
+                            <label for="book-upc">Código UPC<span class="required">*</span></label>
+                            <input type="text" class="upc" id="book-upc"
+                                value="{{ book_to_update.upc if book_to_update else '' }}" name="upc"
+                                placeholder="Digite o código UPC">
+                        </div>
+                        <div class="input-group">
+                            <label for="book-category">Categoria</label>
+                            <select name="category" id="book-category">
+                                <option value="">Selecione a categoria...</option>
+                                {% for category in categories %}
+                                <option value="{{ category }}" {% if book_to_update and
+                                    book_to_update.category==category %}selected{% endif %}>
+                                    {{ category }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="input-group full-width">
+                            <label for="description">Descrição</label>
+                            <textarea id="description" name="description" rows="6"
+                                placeholder="Escreva a descrição do livro..."
+                                required>{{ book_to_update.description if book_to_update else '' }}</textarea>
+                        </div>
+                    </div>
+
+                    <button type="submit">
+                        {% if book_to_update %}Salvar Alterações{% else %}Adicionar Livro{% endif %}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% else %}
+
+    <div class="empty-page">
+        <div class="login-box">
+            <h2>Você precisa estar logado</h2>
+            <p>Entre na sua conta para criar ou atualizar livros, caso você seja um administrador.</p>
+            <div class="login-actions">
+                <a href="{{ url_for('login') }}" class="btn-login">Entrar</a>
+                <a href="{{ url_for('register') }}" class="btn-register">Criar conta</a>
+            </div>
+        </div>
+    </div>
+
+    {% endif %}
+
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <p>© 2025 LitScore — Todos os direitos reservados.</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/profile-dropdown.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/flash-message.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/file-input.js') }}"></script>
+</body>
+
+</html>

@@ -49,7 +49,7 @@ def configure_routes(app: Flask):
             email = form.get('email', '').strip()
             password = form.get('password')
             confirm = form.get('confirm-password')
-            role =  'admin'
+            role =  form.get('role') or 'user'
 
             # --- Validações ---
             if not username or not email or not password or not confirm:

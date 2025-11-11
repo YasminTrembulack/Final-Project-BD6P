@@ -1,10 +1,13 @@
-const input = document.getElementById("cover");
-const label = document.getElementById("cover-label");
+const fileInput = document.getElementById("cover");
+const previewImg = document.getElementById("coverImagePreview");
 
-input.addEventListener("change", () => {
-  if (input.files.length > 0) {
-    label.textContent = input.files[0].name;
-  } else {
-    label.textContent = "Selecione uma capa para o livro...";
-  }
-});
+if (fileInput) {
+  fileInput.addEventListener("change", (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => (previewImg.src = e.target.result);
+      reader.readAsDataURL(file);
+    }
+  });
+}

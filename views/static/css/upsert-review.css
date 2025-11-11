@@ -1,0 +1,26 @@
+.review {
+  background-color: var(--neutral-050);
+  padding: 60px 10%;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10vh;
+}
+
+/* Estrelas da avaliação */
+.star-rating {
+  display: flex;
+  gap: 5px;
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+
+.star-rating .star {
+  color: var(--neutral-300);
+  transition: color 0.2s ease;
+}
+
+.star-rating .star.filled {
+  color: var(--brand-500);
+}

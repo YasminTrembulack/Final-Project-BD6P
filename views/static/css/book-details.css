@@ -64,7 +64,7 @@
   margin: 25px 0;
 }
 
-.book-actions button {
+.book-actions a {
   padding: 10px 18px;
   border: none;
   border-radius: 25px;
@@ -77,18 +77,20 @@
   gap: 8px;
 }
 
-.favorite-btn {
+.download-btn {
+  text-decoration: none;
   background-color: var(--brand-500);
   color: var(--neutral-000);
 }
 
-.favorite-btn:hover {
+.download-btn:hover {
   background-color: var(--brand-600);
 }
 
 .review-btn {
   background-color: var(--neutral-800);
   color: var(--neutral-000);
+  text-decoration: none;
 }
 
 .review-btn:hover {
@@ -228,22 +230,6 @@
   display: flex;
 }
 
-/* Estrelas da avaliação */
-.star-rating {
-  display: flex;
-  gap: 5px;
-  font-size: 1.4rem;
-  cursor: pointer;
-}
-
-.star-rating .star {
-  color: var(--neutral-300);
-  transition: color 0.2s ease;
-}
-
-.star-rating .star.filled {
-  color: var(--brand-500);
-}
 
 /* --- RESPONSIVO --- */
 @media (max-width: 900px) {
