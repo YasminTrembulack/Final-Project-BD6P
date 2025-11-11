@@ -11,9 +11,8 @@ def configure_routes(app: Flask):
     #     ...
 
     # POST - cria uma nova avaliação
-    @app.route('/create_review', methods=['GET', 'POST'])
-    def create_review():
-        book_id = request.args.get('book_id')
+    @app.route('/create_review/<book_id>', methods=['GET', 'POST'])
+    def create_review(book_id):
         if request.method == 'GET':
 
             return render_template(
@@ -71,7 +70,7 @@ def configure_routes(app: Flask):
 
 
     # DELETE - remove uma avaliação
-    @app.route('/delete_review/<review_id>', methods=['GET']) # TODO alterar o método
+    @app.route('/delete_review/<review_id>', methods=['GET'])
     def delete_review(review_id):
         Review.delete_review(review_id)
         book_id = request.args.get("book_id")

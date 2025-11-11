@@ -89,42 +89,90 @@ def configure_routes(app: Flask):
             return redirect(url_for('register'))
 
 
+    @app.route('/update_user_role/<user_id>', methods=['GET', 'POST']) 
+    def update_user_role(user_id):
+        role = request.form.get('role')
+        
+        user = User.get_user_by_field('id', user_id)
+        if not user:
+            flash('Usuário não encontrado.', 'error')
+            return redirect(url_for('get_users'))
+        
+        updated_user = UserEntity(
+            id=user_id,
+            role=role,
+            email=user.email,
+            username=user.username,
+            created_at=user.created_at,
+            password=user.password,
+            updated_at=datetime.now(timezone.utc),
+        )
+        User.update_user(updated_user)
+        
+        flash(f'Role de {user.username} atualizado com sucesso!', 'success')
+        return redirect(url_for('get_users'))
+
+    
     # PUT - atualiza um usuário
-    @app.route('/update_user/<user_id>', methods=['POST']) 
+    @app.route('/update_user/<user_id>', methods=['GET', 'POST']) 
     def update_user(user_id):
+        if request.method == 'GET':
+            return render_template('register.html', user=session.get('user'))
+
+        # Buscar o usuário atual
+        user = User.get_user_by_field('id', user_id)
+        if not user:
+            flash('Usuário não encontrado.', 'error')
+            return redirect(url_for('get_users'))
+
         form = request.form
         username = form.get('username', '').strip()
         role = form.get('role', '')
-        created_at = form.get('created_at', '')
         email = form.get('email', '').strip()
         password = form.get('password')
         confirm = form.get('confirm-password')
-        
-        if User.get_user_by_field('username', username):
+
+        # 🧠 Verifica se username já existe em outro usuário
+        existing_user = User.get_user_by_field('username', username)
+        if existing_user and existing_user.id != user_id:
             flash('Nome de usuário já utilizado, escolha outro.', 'warning')
-            return redirect(url_for('get_user', user_id=user_id))
+            return redirect(url_for('update_user', user_id=user_id))
 
-        if User.get_user_by_field('email', email):
-            flash('Email já cadastrado, tente fazer login.', 'warning')
-            return redirect(url_for('get_user', user_id=user_id))
-        
-        if password != confirm:
+        # 🧠 Verifica se e-mail já existe em outro usuário
+        existing_email = User.get_user_by_field('email', email)
+        if existing_email and existing_email.id != user_id:
+            flash('Email já cadastrado, tente outro.', 'warning')
+            return redirect(url_for('update_user', user_id=user_id))
+
+        # 🔒 Lógica de senha
+        if not password:
+            hashed_password = user.password  # mantém senha atual
+        elif password != confirm:
             flash('As senhas não coincidem.', 'warning')
-            return redirect(url_for('get_user', user_id=user_id))
-        
-        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+            return redirect(url_for('update_user', user_id=user_id))
+        else:
+            hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
-        user = UserEntity(
+        # 🧱 Atualiza objeto
+        updated_user = UserEntity(
             id=user_id,
-            role=role,
-            email=email,
-            username=username,
-            created_at=created_at,
+            role=role or user.role,
+            email=email or user.email,
+            username=username or user.username,
+            created_at=user.created_at,  # mantém a original
             password=hashed_password,
             updated_at=datetime.now(timezone.utc),
         )
+        
+        session_user = session.get('user', {})
+        session_user.update({
+            "username": updated_user.username,
+            "email": updated_user.email,
+            "role": updated_user.role,
+        })
+        session['user'] = session_user
 
-        User.update_user(user)
+        User.update_user(updated_user)
         flash('Usuário atualizado com sucesso!', 'success')
         return redirect(url_for('get_user', user_id=user_id))
 

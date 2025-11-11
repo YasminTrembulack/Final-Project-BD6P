@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cadastro | LitScore</title>
+  <title>{% if user %}Editar Perfil | LitScore{% else %}Cadastro | LitScore{% endif %}</title>
   <link rel="stylesheet" href="../static/css/style.css" />
   <link rel="stylesheet" href="../static/css/auth.css" />
   <link rel="stylesheet" href="../static/css/forms.css" />
@@ -32,42 +32,57 @@
     <!-- FORMULÁRIO -->
     <div class="login-form">
       <div class="form-content">
-        <h2>Crie sua conta</h2>
-        <p class="form-subtitle">Comece sua jornada literária.</p>
+        <h2>{% if user %}Editar perfil{% else %}Crie sua conta{% endif %}</h2>
+        <p class="form-subtitle">
+          {% if user %}
+          Atualize as informações do seu perfil abaixo.
+          {% else %}
+          Comece sua jornada literária.
+          {% endif %}
+        </p>
 
-        <form action="{{ url_for('register') }}" method="POST">
+        <form action=""
+          action="{% if user %}{{ url_for('update_user', user_id=user.id) }}{% else %}{{ url_for('register') }}{% endif %}"
+          method="POST">
           <div class="input-group">
             <label for="username">Nome de usuários</label>
-            <input type="text" name="username" id="username" placeholder="Digite seu nome de usuário" required />
+            <input type="text" name="username" id="username" placeholder="Digite seu nome de usuário" {% if not user %}required{% endif %}
+              value="{% if user %}{{ user.username }}{% endif %}" />
           </div>
 
           <div class="input-group">
             <label for="email">Email</label>
-            <input type="email" name="email" id="email" placeholder="Digite seu email" required />
+            <input type="email" name="email" id="email" placeholder="Digite seu email" 
+              {% if not user %}required{% endif %}
+              value="{% if user %}{{ user.email }}{% endif %}" />
           </div>
 
           <div class="input-group">
             <label for="password">Senha</label>
-            <input type="password" name="password" id="password" placeholder="Crie uma senha" required />
+            <input type="password" name="password" id="password"
+              placeholder="{% if user %}Atualize sua senha{% else %}Crie uma senha{% endif %}" {% if not user %}required{% endif %} />
           </div>
 
           <div class="input-group">
             <label for="confirm-password">Confirmar senha</label>
             <input type="password" name="confirm-password" id="confirm-password" placeholder="Confirme sua senha"
-              required />
+              {% if not user %}required{% endif %} />
           </div>
-          {% if logged_user %}
+          {% if user %}
 
           <div class="input-group">
             <label for="role">Role</label>
             <select name="role" id="role">
-              <option value="user" selected>Normal User</option>
-              <option value="admin">Administrador</option>
+              <option value="user" {% if user and user.role=='user' %}selected{% endif %}>Usuário Comum</option>
+              {% if  user.role == 'admin' %}
+                <option value="admin" {% if user and user.role=='admin' %}selected{% endif %}>Administrador</option>
+              {% endif %}
             </select>
           </div>
+
           {% endif %}
 
-          <button type="submit">Cadastrar</button>
+          <button type="submit">{% if user %}Atualizar{% else %}Cadastrar{% endif %}</button>
           <p class="register-text">
             Já tem uma conta?
             <a href="{{ url_for('login') }}">Entrar</a>

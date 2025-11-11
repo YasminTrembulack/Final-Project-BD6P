@@ -80,7 +80,7 @@ class User:
         try:
             with get_cursor() as cursor:
                 cursor.execute(
-                    "UPDATE final_project_db.users SET full_name = %s, email = %s, password = %s, role = %s WHERE id = %s",
+                    "UPDATE final_project_db.users SET username = %s, email = %s, password = %s, role = %s WHERE id = %s",
                     (user.username, user.email, user.password, user.role, user.id),
                 )
             return True

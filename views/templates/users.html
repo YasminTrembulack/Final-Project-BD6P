@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="../static/css/header.css" />
     <link rel="stylesheet" href="../static/css/hero.css" />
     <link rel="stylesheet" href="../static/css/users.css" />
-    <link rel="stylesheet" href="../static/css/forms.css" />
 </head>
 
 <body>
@@ -56,7 +55,7 @@
 
                 <ul class="profile-dropdown" id="profileDropdown">
                     <li><a href="{{ url_for('get_user', user_id=logged_user.id) }}">Meu perfil</a></li>
-                    
+
                     <li><a href="{{ url_for('logout') }}">Sair</a></li>
                 </ul>
             </div>
@@ -102,14 +101,18 @@
                     <a href="{{ url_for('delete_user', user_id=user.id )}}" class="delete-review">Deletar</a>
                 </div>
                 <div class="user-avatar">
-                    <img src="{{ user.avatar_url or 'https://cdn-icons-png.flaticon.com/512/149/149071.png' }}" alt="Avatar do Usuário">
+                    <img src="{{ user.avatar_url or 'https://cdn-icons-png.flaticon.com/512/149/149071.png' }}"
+                        alt="Avatar do Usuário">
                 </div>
                 <div class="user-info">
                     <h3>{{ user.username }}</h3>
                     <p class="user-email">{{ user.email }}</p>
-                    <p class="user-role">
-                        {{ 'Administrador' if user.role == 'admin' else 'Usuário' }}
-                    </p>
+                    <form method="POST" action="{{ url_for('update_user_role', user_id=user.id) }}" class="role-form">
+                        <select name="role" class="role-select" onchange="this.form.submit()" >
+                            <option value="user" {% if user.role=='user' %}selected{% endif %}>Usuário Comum</option>
+                            <option value="admin" {% if user.role=='admin' %}selected{% endif %}>Administrador</option>
+                        </select>
+                    </form>
                     <p class="user-created">Membro desde {{ user.created_at.strftime('%d/%m/%Y') }}</p>
                 </div>
             </div>
@@ -118,45 +121,43 @@
 
         <div class="pagination">
             {# Botão Anterior #}
-            <a 
-                class="page-btn prev {% if not pagination_info.has_prev %}disabled{% endif %}"
-                href="{% if pagination_info.has_prev %}{{ url_for('get_books', page=pagination_info.page - 1) }}{% else %}#{% endif %}"
-            >‹</a>
+            <a class="page-btn prev {% if not pagination_info.has_prev %}disabled{% endif %}"
+                href="{% if pagination_info.has_prev %}{{ url_for('get_books', page=pagination_info.page - 1) }}{% else %}#{% endif %}">‹</a>
 
             {% if start_page > 1 %}
-                <a class="page-btn" href="{{ url_for('get_books', page=1) }}">1</a>
-                {% if start_page > 2 %}
-                    <span class="page-dots">...</span>
-                {% endif %}
+            <a class="page-btn" href="{{ url_for('get_books', page=1) }}">1</a>
+            {% if start_page > 2 %}
+            <span class="page-dots">...</span>
+            {% endif %}
             {% endif %}
 
             {% for num in range(start_page, end_page + 1) %}
-                <a 
-                    href="{{ url_for('get_books', page=num) }}"
-                    class="page-btn {% if num == pagination_info.page %}active{% endif %}"
-                >{{ num }}</a>
+            <a href="{{ url_for('get_books', page=num) }}"
+                class="page-btn {% if num == pagination_info.page %}active{% endif %}">{{ num }}</a>
             {% endfor %}
 
-            {% if end_page < pagination_info.total_pages %} {% if end_page < pagination_info.total_pages - 1 %} 
-                <span class="page-dots">...</span>
+            {% if end_page < pagination_info.total_pages %} {% if end_page < pagination_info.total_pages - 1 %} <span
+                class="page-dots">...</span>
                 {% endif %}
-                    <a class="page-btn" href="{{ url_for('get_books', page=pagination_info.total_pages) }}">
-                        {{ pagination_info.total_pages }}
-                    </a>
+                <a class="page-btn" href="{{ url_for('get_books', page=pagination_info.total_pages) }}">
+                    {{ pagination_info.total_pages }}
+                </a>
                 {% endif %}
 
                 {# Botão Próximo #}
-                <a 
-                    class="page-btn next {% if not pagination_info.has_next %}disabled{% endif %}"
-                    href="{% if pagination_info.has_next %}{{ url_for('get_books', page=pagination_info.page + 1) }}{% else %}#{% endif %}"
-                >›</a>
+                <a class="page-btn next {% if not pagination_info.has_next %}disabled{% endif %}"
+                    href="{% if pagination_info.has_next %}{{ url_for('get_books', page=pagination_info.page + 1) }}{% else %}#{% endif %}">›</a>
         </div>
 
     </section>
     {% else %}
     <div class="empty-page">
         <div class="login-box">
+            {% if not logged_user %}
             <h2>Você precisa estar logado</h2>
+            {% else %}
+            <h2>Você precisa ser um Administrador</h2>
+            {% endif %}
             <p>Acesse sua conta para visualizar os usuários cadastrados, caso você seja um administrador.</p>
             <div class="login-actions">
                 <a href="{{ url_for('login') }}" class="btn-login">Entrar</a>

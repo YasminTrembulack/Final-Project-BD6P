@@ -82,7 +82,8 @@ def configure_routes(app: Flask):
                 'upsert-book.html',
                 logged_user=session.get('user'),
                 categories=categories
-            ) 
+            )
+
         category = request.form.get('category')
         upc = request.form.get('upc')
         cover = request.files['cover']
@@ -178,9 +179,8 @@ def configure_routes(app: Flask):
         flash(f'Livro deletado com sucesso!', 'success')
         return redirect(url_for('get_books'))
 
-    @app.route('/download_sample', methods=['GET'])
-    def download_sample():
-        book_id = request.args.get('book_id')
+    @app.route('/download_sample/<book_id>', methods=['GET'])
+    def download_sample(book_id):
         book = Book.get_book_by_field('id', book_id)
         
         # Cria o PDF em memória

@@ -81,45 +81,15 @@
       <div class="avatar-section">
         <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
           alt="Avatar do usuário" class="profile-avatar" />
-        <h2>{{ logged_user.username }}</h2>
-        <p class="email">{{ logged_user.email }}</p>
-        <p class="role">
-          {{ 'Administrador' if logged_user.role == 'admin' else 'Usuário' }}
-        </p>
-        <p class="created">Membro desde {{ logged_user.created_at.strftime('%d/%m/%Y') }}</p>
-      </div>
-
-      <div class="edit-section">
-        <h3>Editar Informações</h3>
-        <form action="{{ url_for('update_user', user_id=logged_user.id) }}" method="POST" enctype="multipart/form-data">
-          <div class="form-grid">
-            <div class="input-group">
-              <label for="username">Nome de Usuário</label>
-              <input type="text" name="username" id="username" value="{{ logged_user.username }}" required>
-            </div>
-
-            <div class="input-group">
-              <label for="email">E-mail</label>
-              <input type="email" name="email" id="email" value="{{ logged_user.email }}" required>
-            </div>
-
-            <div class="input-group">
-              <label for="password">Nova Senha</label>
-              <input type="password" name="password" id="password" placeholder="Deixe em branco para não alterar">
-            </div>
-
-            <div class="input-group">
-              <label for="confirm-password">Confirmação da Nova Senha</label>
-              <input type="password" name="confirm-password" id="confirm-password" placeholder="...">
-            </div>
-
-            <input type="hidden" name="role" value="{{ logged_user.role }}">
-            <input type="hidden" name="created_at" value="{{ logged_user.created_at }}">
-
-          </div>
-          <button type="submit" class="save-btn">Salvar Alterações</button>
-
-        </form>
+          <a class="edit-btn" href="{{ url_for('update_user', user_id=logged_user.id)}}">Editar Perfil</a>
+        </div>
+        <div class="profile-content">
+          <h2>{{ logged_user.username }}</h2>
+          <p class="email">{{ logged_user.email }}</p>
+          <p class="role">
+            {{ 'Administrador' if logged_user.role == 'admin' else 'Usuário' }}
+          </p>
+          <p class="created">Membro desde {{ logged_user.created_at.strftime('%d/%m/%Y') }}</p>
       </div>
     </div>
   </section>
