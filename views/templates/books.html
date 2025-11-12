@@ -78,7 +78,7 @@
     <section class="books">
 
         {% if logged_user %}
-        <div class="search-bar">
+        <!-- <div class="search-bar">
             {% if logged_user.role == 'admin' %}
             <a href="{{ url_for('create_book') }}" class="add-book-btn">Adicionar Livro</a>
             {% endif %}
@@ -97,7 +97,7 @@
                     </svg>
                 </button>
             </div>
-        </div>
+        </div> -->
         {% endif %}
 
         <div class="books-grid">
