@@ -64,6 +64,10 @@
   text-align: center;
 }
 
+.password-text {
+  margin-top: 5px;
+}
+
 .register-text a {
   color: var(--brand-800);
   text-decoration: none;

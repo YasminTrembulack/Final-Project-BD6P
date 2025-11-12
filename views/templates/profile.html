@@ -44,8 +44,7 @@
         <div class="profile-info" id="profileTrigger">
           <div class="profile-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="22" height="22">
-              <path
-                d="M12 12c2.67 0 8 1.34 8 4v4H4v-4c0-2.66 5.33-4 8-4zm0-2a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" />
+              <path d="M12 12c2.67 0 8 1.34 8 4v4H4v-4c0-2.66 5.33-4 8-4zm0-2a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" />
             </svg>
           </div>
           <span class="username">{{ logged_user.username }}</span>
@@ -66,54 +65,45 @@
     </nav>
   </header>
 
-  {% if logged_user.id == user.id %}
-    <!-- HERO -->
-    <section class="hero">
-        <div class="hero-content">
-            <h1>Meu Perfil</h1>
-            <p>Gerencie suas informações e preferências.</p>
-        </div>
-    </section>
-
-    <!-- PROFILE CONTENT -->
-    <section class="profile-section">
-      <div class="profile-card">
-        <div class="avatar-section">
-          <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
-            alt="Avatar do usuário" class="profile-avatar" />
-            {% if logged_user.id == user.id %}
-            <a class="edit-btn" href="{{ url_for('update_user', user_id=user.id)}}">Editar Perfil</a>
-            {% endif %}
-          </div>
-          <div class="profile-content">
-            <h2>{{ user.username }}</h2>
-            <p class="email">{{ user.email }}</p>
-            <p class="role">
-              {{ 'Administrador' if user.role == 'admin' else 'Usuário' }}
-            </p>
-            <p class="created">Membro desde {{ user.created_at.strftime('%d/%m/%Y') }}</p>
-        </div>
-      </div>
-    </section>
-    {% else %}
-    <div class="empty-page">
-        <div class="login-box">
-            {% if logged_user and logged_user.id != user.id %}
-            <h2>🚫 Acesso bloquedo</h2>
-            <p>Você não pode acessar o perfil de outro usuário.</p><div class="login-actions">
-              <a class="btn-register" href="{{ url_for('get_user', user_id=logged_user.id) }}">Acessar meu perfil!</a>
-            </div>
-            {% elif not logged_user %}
-            <h2>Você precisa estar logado</h2>
-            <p>Entre na sua conta para visualizar o seu perfil.</p>
-            <div class="login-actions">
-                <a href="{{ url_for('login') }}" class="btn-login">Entrar</a>
-                <a href="{{ url_for('create_user') }}" class="btn-register">Criar conta</a>
-            </div>
-            {% endif %}
-        </div>
+  {% if user %}
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Meu Perfil</h1>
+      <p>Gerencie suas informações e preferências.</p>
     </div>
-    {% endif %}
+  </section>
+
+  <!-- PROFILE CONTENT -->
+  <section class="profile-section">
+    <div class="profile-card">
+      <div class="avatar-section">
+        <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Avatar do usuário"
+          class="profile-avatar" />
+        <a class="edit-btn" href="{{ url_for('update_user', user_id=user.id)}}">Editar Perfil</a>
+      </div>
+      <div class="profile-content">
+        <h2>{{ user.username }}</h2>
+        <p class="email">{{ user.email }}</p>
+        <p class="role">
+          {{ 'Administrador' if user.role == 'admin' else 'Usuário' }}
+        </p>
+        <p class="created">Membro desde {{ user.created_at.strftime('%d/%m/%Y') }}</p>
+      </div>
+    </div>
+  </section>
+  {% else %}
+  <div class="empty-page">
+    <div class="login-box">
+      <h2>Você precisa estar logado</h2>
+      <p>Entre na sua conta para visualizar o seu perfil.</p>
+      <div class="login-actions">
+        <a href="{{ url_for('login') }}" class="btn-login">Entrar</a>
+        <a href="{{ url_for('create_user') }}" class="btn-register">Criar conta</a>
+      </div>
+    </div>
+  </div>
+  {% endif %}
 
   <footer class="footer">
     <p>© 2025 LitScore — Todos os direitos reservados.</p>
@@ -122,4 +112,5 @@
   <script src="{{ url_for('static', filename='js/profile-dropdown.js') }}"></script>
   <script src="{{ url_for('static', filename='js/flash-message.js') }}"></script>
 </body>
+
 </html>

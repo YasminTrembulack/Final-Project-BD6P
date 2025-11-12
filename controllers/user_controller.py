@@ -56,11 +56,17 @@ def configure_routes(app: Flask):
         Exibe o perfil de um usuário específico.
         """
         user = User.get_user_by_field('id', user_id)
+        logged_user = session.get('user', {})
+        
+        if not logged_user or user.id != logged_user.get('id'):
+            user = None
+            if logged_user:
+                flash('Acesso negado: faça login com a conta correspondente visualizar o perfil.', 'warning')
+                user = User.get_user_by_field('id', logged_user.get('id'))
 
         return render_template(
             'profile.html',
             user=user,
-            logged_user=session.get('user'), 
         )
 
 
@@ -165,11 +171,24 @@ def configure_routes(app: Flask):
         - GET → Renderiza o formulário de atualização.
         - POST → Recebe os dados e atualiza o usuário existente. (Se senha não for enviada, mantém a anterior.)
         """
-        if request.method == 'GET':
-            return render_template('upsert-user.html', user=session.get('user'))
-
         # Busca o usuário atual
         user = User.get_user_by_field('id', user_id)
+        logged_user = session.get('user', {})
+
+        if request.method == 'GET':
+            if not logged_user:
+                return redirect(url_for('get_books'))
+            
+            if user.id != logged_user.get('id'):
+                flash('Acesso negado: faça login com a conta correspondente para atualizar este usuário.', 'warning')
+                return redirect(url_for('get_user', user_id=logged_user.get('id')))
+    
+            return render_template(
+                'upsert-user.html', 
+                user=user, 
+                logged_user=logged_user
+            )
+
         if not user:
             flash('Usuário não encontrado.', 'error')
             return redirect(url_for('get_users'))

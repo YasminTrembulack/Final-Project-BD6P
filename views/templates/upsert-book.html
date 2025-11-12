@@ -70,39 +70,39 @@
     {% if logged_user %}
     <div class="book">
         <div class="form-content book-layout">
-            <!-- 📕 Pré-visualização da capa -->
             <form class="form-book"
                 action="{% if book_to_update %}{{ url_for('update_book', book_id=book_to_update.id) }}{% else %}{{ url_for('create_book') }}{% endif %}"
                 method="POST" enctype="multipart/form-data">
-            <div class="cover-preview">
-                <label for="cover" class="cover-label">
-                    {% if book_to_update and book_to_update.img_link and book_to_update.img_link.startswith('cover_uploads/')%}
-                    <img id="coverImagePreview" src="{{ url_for('static', filename=book_to_update.img_link ) }}   " alt="Capa do Livro">
-                    {% elif book_to_update and book_to_update.img_link %}
-                    <img id="coverImagePreview" src="{{ book_to_update.img_link }}" alt="Capa do Livro">
-                    {% else %}
-                    <img id="coverImagePreview" src="{{ 'https://plus.unsplash.com/premium_photo-1675738775295-dffbbd2e6f34?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=687' }}"
-                        alt="Capa do Livro">
-                    {% endif %}
-                </label>
+                <div class="cover-preview">
+                    <label for="cover" class="cover-label">
+                        {% if book_to_update and book_to_update.img_link and
+                        book_to_update.img_link.startswith('cover_uploads/')%}
+                        <img id="coverImagePreview" src="{{ url_for('static', filename=book_to_update.img_link ) }}   "
+                            alt="Capa do Livro">
+                        {% elif book_to_update and book_to_update.img_link %}
+                        <img id="coverImagePreview" src="{{ book_to_update.img_link }}" alt="Capa do Livro">
+                        {% else %}
+                        <img id="coverImagePreview"
+                            src="{{ 'https://plus.unsplash.com/premium_photo-1675738775295-dffbbd2e6f34?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=687' }}"
+                            alt="Capa do Livro">
+                        {% endif %}
+                    </label>
 
-                <!-- input oculto -->
-                <input type="file" name="cover" id="cover" accept="image/*" hidden />
-            </div>
+                    <input type="file" name="cover" id="cover" accept="image/*" hidden />
+                </div>
 
-            <!-- 📘 Formulário -->
-            <div class="form-fields">
-                <h2>
-                    {% if book_to_update %}Editar Livro{% else %}Adicionar Novo Livro{% endif %}
-                </h2>
-                <p class="form-subtitle">
-                    {% if book_to_update %}
-                    Atualize as informações do livro abaixo.
-                    {% else %}
-                    Preencha as informações para adicionar um novo livro.
-                    {% endif %}
-                </p>
-                
+                <div class="form-fields">
+                    <h2>
+                        {% if book_to_update %}Editar Livro{% else %}Adicionar Novo Livro{% endif %}
+                    </h2>
+                    <p class="form-subtitle">
+                        {% if book_to_update %}
+                        Atualize as informações do livro abaixo.
+                        {% else %}
+                        Preencha as informações para adicionar um novo livro.
+                        {% endif %}
+                    </p>
+
 
                     <div class="form-grid">
                         <div class="input-group">

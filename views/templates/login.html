@@ -41,6 +41,7 @@
           <div class="input-group">
             <label for="password">Senha</label>
             <input type="password" name="password" id="password" placeholder="Digite sua senha">
+            <p class="register-text password-text">Esqueceu a senha? <a href="{{ url_for('forgot_password') }}">Click aqui!</a></p>
           </div>
           <button type="submit">Entrar</button>
           <p class="register-text">Não tem uma conta? <a href="{{ url_for('create_user') }}">Cadastre-se</a></p>
