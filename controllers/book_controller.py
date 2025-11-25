@@ -183,118 +183,30 @@ def configure_routes(app: Flask):
         return redirect(url_for('get_books'))
 
 
-    @app.route('/download_sample/<book_id>', methods=['GET'])
+    @app.route('/download_sample/<book_id>')
     def download_sample(book_id):
         book = Book.get_book_by_field('id', book_id)
-        
+
         buffer = BytesIO()
         pdf = canvas.Canvas(buffer, pagesize=A4)
         width, height = A4
 
-        pdf.setTitle(f"Amostra - {book.title}")
-
-        pdf.setFillColorRGB(0.95, 0.95, 0.95)
-        pdf.rect(0, 0, width, height, fill=True, stroke=False)
-
         pdf.setFont("Helvetica-Bold", 22)
-        pdf.setFillColor(colors.HexColor("#222222"))
-        pdf.drawCentredString(width / 2, height - 100, book.title)
+        pdf.drawCentredString(width / 2, height - 80, book.title)
 
         pdf.setFont("Helvetica", 14)
-        pdf.setFillColor(colors.HexColor("#444444"))
-        pdf.drawCentredString(width / 2, height - 130, f"por {book.author}")
-
-        if book.img_link:
-            try:
-                if book.img_link.startswith("cover_uploads/"):
-                    local_path = os.path.join("views", "static", book.img_link.replace("/", os.sep))
-                    print(local_path)
-                    if os.path.exists(local_path):
-                        img = ImageReader(local_path)
-                    else:
-                        print(f"Imagem local não encontrada: {local_path}")
-                else:
-                    response = requests.get(book.img_link, stream=True, timeout=5)
-                    if response.status_code == 200:
-                        img = ImageReader(BytesIO(response.content))
-
-                if img:
-                    img_width, img_height = 200, 280
-                    pdf.drawImage(
-                        img,
-                        (width - img_width) / 2,
-                        height - 450,
-                        width=img_width,
-                        height=img_height,
-                        preserveAspectRatio=True,
-                        mask='auto'
-                    )
-            except Exception as e:
-                print(f"Erro ao carregar imagem: {e}")
-
-        pdf.setStrokeColor(colors.HexColor("#888888"))
-        pdf.line(80, height - 470, width - 80, height - 470)
-
-        pdf.setFont("Helvetica-Oblique", 12)
-        pdf.setFillColor(colors.HexColor("#555555"))
-        pdf.drawCentredString(width / 2, height - 500, "Amostra gratuita do livro")
-
-        pdf.showPage()
-        pdf.setFont("Helvetica-Bold", 16)
-        pdf.setFillColor(colors.HexColor("#222222"))
-        pdf.drawString(70, height - 80, "Resumo do Livro")
-
-        def dividir_texto(texto, largura_max):
-            palavras = texto.split()
-            linha, linhas = "", []
-            for palavra in palavras:
-                if pdf.stringWidth(linha + " " + palavra, "Helvetica", 12) < largura_max:
-                    linha += " " + palavra
-                else:
-                    linhas.append(linha.strip())
-                    linha = palavra
-            linhas.append(linha.strip())
-            return linhas
+        pdf.drawCentredString(width / 2, height - 110, f"por {book.author}")
 
         pdf.setFont("Helvetica", 12)
-        pdf.setFillColor(colors.HexColor("#333333"))
-        y = height - 120
-        max_width = width - 140
+        pdf.drawString(50, height - 160, (book.description or "Nenhuma descrição disponível.")[:400])
 
-        if book.description:
-            for line in dividir_texto(book.description, max_width):
-                pdf.drawString(70, y, line)
-                y -= 18
-                if y < 80:
-                    pdf.showPage()
-                    pdf.setFont("Helvetica", 12)
-                    y = height - 80
-        else:
-            pdf.drawString(70, y, "Nenhuma descrição disponível para este livro.")
-            
         pdf.showPage()
-        pdf.setFont("Helvetica-Bold", 16)
-        pdf.setFillColor(colors.HexColor("#222222"))
-        pdf.drawString(70, height - 80, "Capítulo 1")
 
-        chapter_text = "\n\n".join(fake.paragraph() for _ in range(40))
+        pdf.setFont("Helvetica-Bold", 16)
+        pdf.drawString(50, height - 60, "Capítulo 1")
 
         pdf.setFont("Helvetica", 12)
-        pdf.setFillColor(colors.HexColor("#333333"))
-        y = height - 120
-        max_width = width - 140
-
-        for line in dividir_texto(chapter_text, max_width):
-            pdf.drawString(70, y, line)
-            y -= 18
-            if y < 80:
-                pdf.showPage()
-                pdf.setFont("Helvetica", 12)
-                y = height - 80
-
-        pdf.setFont("Helvetica-Oblique", 10)
-        pdf.setFillColor(colors.HexColor("#666666"))
-        pdf.drawCentredString(width / 2, 40, "Gerado automaticamente por LitScore © 2025")
+        pdf.drawString(50, height - 100, "Este é apenas um trecho de amostra gerado automaticamente.")
 
         pdf.save()
         buffer.seek(0)
