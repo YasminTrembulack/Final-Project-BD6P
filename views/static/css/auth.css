@@ -3,14 +3,13 @@
   height: 100vh;
 }
 
-/* --- Lado da ilustração --- */
 .login-illustration {
   flex: 1;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden; /* garante que o blur não vaze */
+  overflow: hidden;
 }
 
 .login-illustration::before {
@@ -20,11 +19,10 @@
   background: url("https://plus.unsplash.com/premium_photo-1729542052815-def2301cc3fd?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=800")
     center/cover no-repeat;
   filter: blur(3px);
-  transform: scale(1.1); /* evita bordas visíveis após blur */
+  transform: scale(1.1);
   z-index: 0;
 }
 
-/* Logo sobre a imagem */
 .login-illustration .logo {
   z-index: 1;
   display: flex;
@@ -47,7 +45,6 @@
   filter: drop-shadow(0 3px 6px var(--shadow-400));
 }
 
-/* --- Lado do formulário --- */
 .login-form {
   flex: 1;
   display: flex;
@@ -78,7 +75,6 @@
   text-decoration: underline;
 }
 
-/* --- Responsividade --- */
 @media (max-width: 900px) {
   .login-page {
     flex-direction: column;

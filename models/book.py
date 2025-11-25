@@ -17,8 +17,6 @@ class BookEntity(BaseEntity):
 
 
 class Book:
-
-    # GET - retorna todos os livros
     @staticmethod
     def get_books(page: int = 1, per_page: int = 20) -> Dict[str, Any]:
         try:
@@ -46,7 +44,6 @@ class Book:
             logger.exception(f"Erro ao buscar livros paginados: {e}")
             return {"data": [], "pagination": PaginationInfo(page, per_page, 0)}
 
-    # GET - retorna categorias distintas dos livros
     @staticmethod
     def list_distinct_categories() -> Optional[List[str]]:
         try:
@@ -58,7 +55,6 @@ class Book:
             logger.exception(f"Erro ao buscar categorias dos livros: {e}")
             return None
     
-    # GET - retorna livros a partir de um campo
     @staticmethod
     def get_book_by_field(key: str, value: str) -> Optional[List[BookEntity]] | Optional[BookEntity]:
         try:
@@ -77,7 +73,6 @@ class Book:
             logger.exception(f"Erro ao buscar livros: {e}")
             return None
 
-    # POST - criar livro
     @staticmethod
     def create_book(book: BookEntity) -> bool:
         try:
@@ -93,7 +88,6 @@ class Book:
             logger.exception(f"Erro ao criar livro: {e}")
             return False
 
-    # PUT - atualizar livro
     @staticmethod
     def update_book(book: BookEntity) -> bool:
         try:
@@ -107,7 +101,6 @@ class Book:
             logger.exception(f"Erro ao atualizar livro: {e}")
             return False
 
-    # DELETE - deletar livro a partir do ID
     @staticmethod
     def delete_book(id: str) -> bool:
         try:

@@ -3,17 +3,15 @@
     center/cover no-repeat;
 }
 
-/* --- SEÇÃO DE LIVROS --- */
 .users {
   background-color: var(--neutral-050);
   padding: 60px 10%;
   text-align: center;
 }
 
-/* GRID DE USUÁRIOS */
 .users-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 colunas fixas */
+  grid-template-columns: repeat(3, 1fr);
   gap: 40px;
   justify-content: center;
   align-content: start;
@@ -21,7 +19,6 @@
   margin: 0 auto;
 }
 
-/* CARD DE USUÁRIO */
 .user-card {
   position: relative;
   background-color: var(--neutral-000);
@@ -58,7 +55,6 @@
   box-shadow: 0 10px 25px var(--shadow-200);
 }
 
-/* AVATAR */
 .user-avatar img {
   width: 90px;
   height: 90px;
@@ -68,7 +64,6 @@
   border: 3px solid var(--brand-300);
 }
 
-/* INFORMAÇÕES DO USUÁRIO */
 .user-info h3 {
   font-family: var(--font-title);
   color: var(--neutral-800);
@@ -97,10 +92,9 @@
 .user-created {
   font-size: 0.8rem;
   color: var(--neutral-500);
-  margin-top: auto; /* fixa no final do card */
+  margin-top: auto;
 }
 
-/* --- BARRA DE PESQUISA E FILTROS --- */
 .search-bar {
   display: flex;
   justify-content: flex-end;
@@ -110,7 +104,6 @@
   max-width: 1000px;
 }
 
-/* DROPDOWN DE FILTRO */
 .filter-select {
   height: 45px;
   min-width: 150px;
@@ -127,7 +120,6 @@
   outline: none;
   appearance: none;
 
-  /* seta customizada */
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 20 20'%3E%3Cpath fill='%23f57c00' d='M5 7l5 5 5-5H5z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 14px center;
@@ -144,14 +136,12 @@
   outline: none;
 }
 
-/* --- BARRA DE BUSCA --- */
 .search-container {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-/* INPUT DE BUSCA */
 .user-search {
   height: 45px;
   width: 280px;
@@ -171,7 +161,6 @@
   box-shadow: 0 4px 12px var(--shadow-200);
 }
 
-/* --- BOTÃO CIRCULAR --- */
 .search-btn {
   width: 45px;
   height: 45px;
@@ -192,14 +181,12 @@
   transform: scale(1.05);
 }
 
-/* ÍCONE SVG */
 .search-btn svg {
   width: 20px;
   height: 20px;
   fill: var(--neutral-000);
 }
 
-/* --- PAGINAÇÃO --- */
 .pagination {
   display: flex;
   justify-content: center;
@@ -209,10 +196,9 @@
   flex-wrap: wrap;
 }
 
-/* BOTÕES */
 .page-btn {
-  width: 42px; /* largura fixa */
-  height: 42px; /* altura fixa */
+  width: 42px; 
+  height: 42px; 
   display: flex;
   justify-content: center;
   align-items: center;
@@ -221,14 +207,13 @@
   color: var(--neutral-700);
   font-family: var(--font-primary);
   font-size: 0.95rem;
-  border-radius: 50%; /* círculo perfeito */
+  border-radius: 50%; 
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 2px 6px var(--shadow-100);
   text-decoration: none;
 }
 
-/* HOVER */
 .page-btn:hover {
   border-color: var(--brand-400);
   color: var(--brand-700);
@@ -236,7 +221,6 @@
   transform: translateY(-2px);
 }
 
-/* ATIVO */
 .page-btn.active {
   background-color: var(--brand-500);
   color: var(--neutral-000);
@@ -245,7 +229,6 @@
   box-shadow: 0 4px 10px var(--shadow-200);
 }
 
-/* DESATIVADO */
 .page-btn.disabled {
   opacity: 0.5;
   cursor: not-allowed;
@@ -254,14 +237,12 @@
   pointer-events: none;
 }
 
-/* RETICÊNCIAS */
 .page-dots {
   color: var(--neutral-500);
   font-size: 1rem;
   padding: 0 5px;
 }
 
-/* SETAS (caso queira maior destaque) */
 .page-btn.prev,
 .page-btn.next {
   font-size: 1.2rem;
@@ -285,12 +266,11 @@
   transform: translateY(-2px);
 }
 
-/* --- Modal Overlay --- */
 .modal-overlay {
   position: fixed;
   inset: 0;
   background-color: rgba(0,0,0,0.6);
-  display: none; /* fica escondido até abrir */
+  display: none; 
   justify-content: center;
   align-items: center;
   z-index: 1000;
@@ -318,18 +298,16 @@
   font-weight: 500;
 }
 
-/* Vermelho pastel — Excluir */
 .delete-review {
-  color: #ef4444; /* vermelho pastel */
-  background-color: #ffe4e4; /* vermelho bem claro */
+  color: #ef4444; 
+  background-color: #ffe4e4; 
 }
 
 .delete-review:hover {
-  background-color: #ffd0d0; /* hover suave */
-  color: #dc2626; /* vermelho mais forte */
+  background-color: #ffd0d0; 
+  color: #dc2626;
 }
 
-/* --- RESPONSIVO --- */
 @media (max-width: 900px) {
   .books {
     padding: 70px 5%;

@@ -27,7 +27,6 @@
   padding: 30px;
 }
 
-/* 📕 Lado esquerdo — preview da capa */
 .cover-preview {
   display: flex;
   flex-direction: column;
@@ -37,7 +36,6 @@
   position: relative;
 }
 
-/* A imagem da capa */
 .cover-preview img {
   width: 450px;
   height: 550px;
@@ -47,14 +45,12 @@
   transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.25s;
 }
 
-/* Efeito hover — mostra que é clicável */
 .cover-preview img:hover {
   transform: scale(1.02);
   box-shadow: 0 6px 25px rgba(0, 0, 0, 0.25);
   opacity: 0.9;
 }
 
-/* Indicação visual de “clicável” (opcional) */
 .cover-label::after {
   content: "Clique para alterar a capa";
   position: absolute;
@@ -76,13 +72,11 @@
 }
 
 
-/* 📘 Lado direito — formulário */
 .form-fields {
   flex: 1;
   min-width: 400px;
 }
 
-/* Responsivo */
 @media (max-width: 850px) {
   .book-layout {
     flex-direction: column;

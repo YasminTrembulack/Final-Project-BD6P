@@ -9,21 +9,17 @@ class PaginationInfo:
 
     @property
     def total_pages(self) -> int:
-        """Calcula o número total de páginas."""
         return ceil(self.total_items / self.per_page) if self.per_page else 1
 
     @property
     def has_next(self) -> bool:
-        """Verifica se há próxima página."""
         return self.page < self.total_pages
 
     @property
     def has_prev(self) -> bool:
-        """Verifica se há página anterior."""
         return self.page > 1
 
     def to_dict(self) -> dict:
-        """Retorna os metadados da paginação em formato de dicionário."""
         return {
             "page": self.page,
             "per_page": self.per_page,

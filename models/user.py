@@ -16,7 +16,6 @@ class UserEntity(BaseEntity):
 
 class User:
 
-    # GET - retorna todos os usuários
     @staticmethod
     def get_users(page: int = 1, per_page: int = 20) -> Dict[str, Any]:
         try:
@@ -41,7 +40,6 @@ class User:
             logger.exception(f"Erro ao buscar usuários: {e}")
             return []
 
-    # GET - retorna usuários a partir de um campo
     @staticmethod
     def get_user_by_field(key: str, value: str) -> Optional[List[UserEntity]] | Optional[UserEntity]:
         try:
@@ -58,7 +56,6 @@ class User:
             logger.exception(f"Erro ao buscar usuários: {e}")
             return None
 
-    # POST - criar usuário
     @staticmethod
     def create_user(user: UserEntity) -> bool:
         try:
@@ -74,7 +71,6 @@ class User:
             logger.exception(f"Erro ao criar usuário: {e}")
             return False
 
-    # PUT - atualizar usuário
     @staticmethod
     def update_user(user: UserEntity) -> bool:
         try:
@@ -88,7 +84,6 @@ class User:
             logger.exception(f"Erro ao atualizar usuário: {e}")
             return False
 
-    # DELETE - deletar usuário a partir do ID
     @staticmethod
     def delete_user(id: str) -> bool:
         try:

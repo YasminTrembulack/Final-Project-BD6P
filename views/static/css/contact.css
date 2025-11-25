@@ -2,7 +2,6 @@
   background: url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=1170&q=80') center/cover no-repeat;
 }
 
-/* CONTATO */
 .contact {
   display: flex;
   justify-content: center;
@@ -31,7 +30,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between; /* centraliza verticalmente */
+  justify-content: space-between;
 }
 
 .contact-info img {
@@ -41,8 +40,8 @@
 
 .contact-info h2,
 .contact-info p {
-    text-align: left;  /* alinha à esquerda */
-    width: 100%;       /* ocupa toda a largura do container */
+    text-align: left;  
+    width: 100%;       
 }
 
 
@@ -54,7 +53,6 @@
   margin-bottom: 25px;
 }
 
-/* INPUTS */
 .input-group {
   margin-bottom: 20px;
 }
@@ -84,7 +82,6 @@
   outline: none;
 }
 
-/* BOTÃO */
 button {
   width: 100%;
   padding: 14px;
@@ -103,14 +100,12 @@ button:hover {
   transform: translateY(-2px);
 }
 
-/* INFORMAÇÕES */
 .contact-info p {
   margin-bottom: 14px;
   color: var(--neutral-700);
   font-size: 1rem;
 }
 
-/* RESPONSIVO */
 @media (max-width: 900px) {
   .contact-card {
     flex-direction: column;

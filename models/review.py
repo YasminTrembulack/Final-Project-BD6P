@@ -1,6 +1,6 @@
 from loguru import logger
 from dataclasses import dataclass
-from typing import Dict, List, Optional
+from typing import List, Optional
 
 from models.book import BookEntity
 from models.db import BaseEntity, get_cursor
@@ -19,7 +19,6 @@ class ReviewEntity(BaseEntity):
 
 class Review:
 
-    # GET - retorna todos as avaliações
     @staticmethod
     def get_reviews() -> List[ReviewEntity]:
         try:
@@ -31,7 +30,6 @@ class Review:
             logger.exception(f"Erro ao buscar avaliações: {e}")
             return []
 
-    # GET - retorna avaliações a partir de um campo
     @staticmethod
     def get_review_by_field(key: str, value: str) -> Optional[List[ReviewEntity]]:
         try:
@@ -49,7 +47,6 @@ class Review:
             logger.exception(f"Erro ao buscar avaliações: {e}")
             return None
 
-    # POST - criar avaliação
     @staticmethod
     def create_review(review: ReviewEntity) -> bool:
         try:
@@ -65,7 +62,6 @@ class Review:
             logger.exception(f"Erro ao criar avaliação: {e}")
             return False
 
-    # PUT - atualizar avaliação
     @staticmethod
     def update_review(review: ReviewEntity) -> bool:
         try:
@@ -79,7 +75,6 @@ class Review:
             logger.exception(f"Erro ao atualizar avaliação: {e}")
             return False
 
-    # DELETE - deletar avaliação a partir do ID
     @staticmethod
     def delete_review(id: str) -> bool:
         try:

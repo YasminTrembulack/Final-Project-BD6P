@@ -3,7 +3,6 @@
     center/cover no-repeat;
 }
 
-/* --- SEÇÃO DE PERFIL --- */
 .profile-section {
   background-color: var(--neutral-050);
   display: flex;
@@ -12,7 +11,6 @@
   height: 40vh;
 }
 
-/* CARD DE PERFIL */
 .profile-card {
   background-color: var(--neutral-000);
   border-radius: 16px;
@@ -27,7 +25,6 @@
 }
 
 
-/* --- COLUNA ESQUERDA: AVATAR --- */
 .avatar-section {
   display: flex;
   flex-direction: column;
@@ -85,7 +82,6 @@
 }
 
 
-/* BOTÃO DE SALVAR */
 .edit-btn {
   text-decoration: none;
   align-self: flex-start;
@@ -107,7 +103,6 @@
   transform: translateY(-2px);
 }
 
-/* --- RESPONSIVO --- */
 @media (max-width: 900px) {
   .profile-card {
     flex-direction: column;

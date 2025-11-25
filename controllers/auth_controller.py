@@ -10,28 +10,10 @@ from itsdangerous import URLSafeTimedSerializer
 
 
 def configure_routes(app: Flask):
-    """
-    Configura todas as rotas relacionadas à autenticação e recuperação de senha.
-    """
 
-
-    # ==========================================================
-    # 📬 Configuração do serviço de e-mail
-    # ==========================================================
     mail = Mail(app)
-
-
-    # ==========================================================
-    # 🔑 Gerador de tokens seguros
-    # ==========================================================
-    # O serializer utiliza a SECRET_KEY do app para gerar tokens únicos e seguros,
-    # usados para recuperação de senha (com validade configurável em segundos).
     serializer = URLSafeTimedSerializer(app.secret_key)
 
-
-    # ==========================================================
-    # 🔐 LOGIN - Página e autenticação de usuários
-    # ==========================================================
     @app.route('/login', methods=['GET', 'POST'])
     def login():
         if request.method == 'GET':
@@ -41,18 +23,15 @@ def configure_routes(app: Flask):
             email_username = request.form.get('email_username', '').strip()
             password = request.form.get('password', '')
 
-            # --- validações básicas ---
             if not email_username or not password:
                 flash('Preencha todos os campos.', 'warning')
                 return render_template('login.html')
 
-            # --- busca por email OU username ---
             user = (
                 User.get_user_by_field('email', email_username)
                 or User.get_user_by_field('username', email_username)
             )
 
-            # --- valida senha ---
             if not user:
                 flash('Credenciais incorretas.', 'error')
                 return render_template('login.html')
@@ -64,7 +43,6 @@ def configure_routes(app: Flask):
                 flash('Credenciais incorretas.', 'error')
                 return render_template('login.html')
 
-            # --- autenticação bem-sucedida ---
             session['user'] = {
                 "id": user.id,
                 "username": user.username,
@@ -82,43 +60,26 @@ def configure_routes(app: Flask):
             return render_template('login.html')
 
 
-    # ==========================================================
-    # 🚪 LOGOUT - Finaliza sessão e redireciona
-    # ==========================================================
     @app.route('/logout')
     def logout():
-        """Finaliza a sessão atual e retorna à página anterior ou inicial."""
         session.clear()
         return redirect(request.referrer or url_for('index'))
 
 
-    # ==========================================================
-    # 🔄 RECUPERAÇÃO DE SENHA - Etapa 1: Solicitação de redefinição
-    # ==========================================================
     @app.route('/forgot_password', methods=['GET', 'POST'])
     def forgot_password():
-        """
-        Página de recuperação de senha:
-        - Recebe o e-mail do usuário
-        - Gera token temporário
-        - Envia link de redefinição por e-mail
-        """
         if request.method == 'POST':
             email = request.form.get('email')
             user = User.get_user_by_field('email', email)
 
-            # --- Validação: e-mail inexistente ---
             if not user:
                 flash("Email não vinculado a nenhuma conta. Por favor, digite um email válido.", "info")
                 return redirect(url_for('forgot_password'))
 
-            # --- Criação do token seguro para redefinição ---
             token = serializer.dumps(user.email, salt='password-reset-salt')
 
-            # --- Gera o link de redefinição completo ---
             reset_url = url_for('reset_password', token=token, _external=True)
 
-            # --- Gera o conteúdo HTML do e-mail ---
             html = render_template(
                 'reset-password-email.html',
                 reset_url=reset_url,
@@ -126,9 +87,6 @@ def configure_routes(app: Flask):
                 year=2025
             )
 
-            # ==========================================================
-            # 📧 Envio do e-mail de recuperação (via Mailtrap: https://mailtrap.io/home)
-            # ==========================================================
             msg = Message(
                 subject="Recuperação de senha - LitScore",
                 recipients=[user.email],
@@ -142,22 +100,12 @@ def configure_routes(app: Flask):
             flash("Se o e-mail existir, você receberá um link para redefinir sua senha.", "info")
             return redirect(url_for('login'))
 
-        # --- Exibe o formulário de recuperação ---
         return render_template('password.html', forgot_password=True)
 
 
-    # ==========================================================
-    # 🔑 REDEFINIÇÃO DE SENHA - Etapa 2: Novo cadastro de senha
-    # ==========================================================
     @app.route('/reset_password/<token>', methods=['GET', 'POST'])
     def reset_password(token):
-        """
-        Página de redefinição de senha:
-        - Valida o token
-        - Permite atualizar a senha
-        """
         try:
-            # Valida e decodifica o token (expira em 10 minutos = 600s)
             email = serializer.loads(token, salt='password-reset-salt', max_age=600)
         except Exception:
             flash("Link inválido ou expirado.", "error")
@@ -167,12 +115,10 @@ def configure_routes(app: Flask):
             password = request.form.get('password')
             confirm = request.form.get('confirm-password')
 
-            # --- Verifica correspondência das senhas ---
             if password != confirm:
                 flash("As senhas não coincidem.", "warning")
                 return redirect(url_for('reset_password', token=token))
 
-            # --- Atualiza senha no banco (com hash seguro) ---
             hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
             user = User.get_user_by_field('email', email)
             user.password = hashed_password
@@ -181,5 +127,4 @@ def configure_routes(app: Flask):
             flash("Senha atualizada com sucesso!", "success")
             return redirect(url_for('login'))
 
-        # --- Exibe o formulário para redefinir senha ---
         return render_template('password.html', token=token)

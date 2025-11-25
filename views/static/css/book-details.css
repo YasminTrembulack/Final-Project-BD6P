@@ -136,7 +136,7 @@
 .author-section {
   display: flex;
   flex-direction: column;
-  max-width: 70%; /* evita que o autor/estrelas invadam espaço dos botões */
+  max-width: 70%;
 }
 
 .review-author {
@@ -152,7 +152,7 @@
 
 .review-controls {
   display: flex;
-  gap: 8px; /* espaço entre os botões */
+  gap: 8px;
   align-items: center;
 }
 
@@ -166,43 +166,41 @@
   font-weight: 500;
 }
 
-/* Azul pastel — Editar */
 .edit-review {
-  color: #3b82f6; /* azul pastel médio */
-  background-color: #e0f0ff; /* azul bem clarinho */
+  color: #3b82f6;
+  background-color: #e0f0ff;
 }
 
 .edit-review:hover {
-  background-color: #cde5ff; /* hover suave */
-  color: #2563eb; /* azul mais forte */
+  background-color: #cde5ff;
+  color: #2563eb;
 }
 
-/* Vermelho pastel — Excluir */
 .delete-review {
-  color: #ef4444; /* vermelho pastel */
-  background-color: #ffe4e4; /* vermelho bem claro */
+  color: #ef4444;
+  background-color: #ffe4e4;
 }
 
 .delete-review:hover {
-  background-color: #ffd0d0; /* hover suave */
-  color: #dc2626; /* vermelho mais forte */
+  background-color: #ffd0d0;
+  color: #dc2626;
 }
 
 .review-date {
   font-size: 0.8rem;
   color: var(--neutral-500);
   white-space: nowrap;
-  margin-right: 8px; /* espaço entre data e botões */
+  margin-right: 8px;
   width: 100px;
 }
 
 .star {
   font-size: 1.5rem;
-  color: var(--neutral-300); /* estrela vazia */
+  color: var(--neutral-300);
 }
 
 .star.filled {
-  color: var(--brand-500); /* estrela preenchida */
+  color: var(--brand-500);
 }
 
 .review-text {
@@ -212,9 +210,8 @@
   line-height: 1.5;
 }
 
-/* --- MODAL --- */
 .modal {
-  display: none; /* escondido por padrão */
+  display: none;
   position: fixed;
   top: 0;
   left: 0;
@@ -231,7 +228,6 @@
 }
 
 
-/* --- RESPONSIVO --- */
 @media (max-width: 900px) {
   .book-details {
     flex-direction: column;

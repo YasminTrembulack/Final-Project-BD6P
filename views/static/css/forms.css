@@ -97,12 +97,10 @@ textarea:focus {
   min-width: 600px;
 }
 
-/* As duas primeiras linhas (4 primeiros campos) terão duas colunas */
 .form-grid > :nth-child(-n+4) {
   grid-column: span 1;
 }
 
-/* A partir do 5º campo, ocupa toda a largura */
 .form-grid > :nth-child(n+5) {
   grid-column: 1 / -1;
 }
@@ -112,7 +110,7 @@ textarea:focus {
 }
 
 .file-upload input[type="file"] {
-  display: none; /* Esconde o input real */
+  display: none;
 }
 
 .file-upload label {
@@ -124,18 +122,15 @@ textarea:focus {
   transition: all 0.3s ease;
 }
 
-/* Efeito visual ao passar o mouse */
 .file-upload label:hover {
   border-color: var(--brand-500, #ff7a00);
 }
 
-/* Se quiser centralizar dentro de forms */
 .file-upload {
   margin-top: 10px;
 }
 
 
-/* Responsivo: 1 coluna em telas menores */
 @media (max-width: 650px) {
   .form-grid {
     grid-template-columns: 1fr;
