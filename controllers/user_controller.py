@@ -47,6 +47,7 @@ def configure_routes(app: Flask):
         return render_template(
             'profile.html',
             user=user,
+            logged_user=logged_user
         )
 
 
