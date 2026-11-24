@@ -99,9 +99,10 @@ jobs:
         with:
           scan-args: |-
             --x-plugins=python/requirements
-            --lockfile=./requirements.txt
+            --recursive
+            ./
             --format=json
-            --output=osv.json
+            --output-file=osv.json
 
       - name: Resumir findings SCA
         id: resultados
