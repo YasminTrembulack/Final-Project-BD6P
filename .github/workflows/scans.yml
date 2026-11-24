@@ -98,6 +98,7 @@ jobs:
         uses: google/osv-scanner-action/osv-scanner-action@v2.7.0
         with:
           scan-args: |-
+            --x-plugins=python/requirements
             --lockfile=./requirements.txt
             --format=json
             --output=osv.json
