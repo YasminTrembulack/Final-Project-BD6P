@@ -61,12 +61,19 @@ class Book:
     # GET - retorna livros a partir de um campo
     @staticmethod
     def get_book_by_field(key: str, value: str) -> Optional[List[BookEntity]] | Optional[BookEntity]:
+        queries = {
+            "id": "SELECT * FROM books WHERE id = %s",
+            "upc": "SELECT * FROM books WHERE upc = %s",
+            "title": "SELECT * FROM books WHERE title = %s",
+            "category": "SELECT * FROM books WHERE category = %s",
+            "author": "SELECT * FROM books WHERE author = %s",
+        }
         try:
             allowed_keys = {"id", "upc", "title", "category", "author"}
             if key not in allowed_keys:
                 raise ValueError(f"Invalid column: {key}")
             with get_cursor() as cursor:
-                cursor.execute(f"SELECT * FROM books WHERE {key} = %s",(value,))
+                cursor.execute(queries[key], (value,))
                 if key in {"id", "upc"}:
                     book = cursor.fetchone()
                     return BookEntity(**book) if book else None

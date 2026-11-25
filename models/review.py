@@ -35,16 +35,26 @@ class Review:
     @staticmethod
     def get_review_by_field(key: str, value: str) -> Optional[List[ReviewEntity]]:
         try:
-            allowed_keys = {"id", "user_id", "book_id", "rating"}
-            if key not in allowed_keys:
+            queries = {
+                "id": "SELECT * FROM reviews WHERE id = %s ORDER BY created_at DESC",
+                "user_id": "SELECT * FROM reviews WHERE user_id = %s ORDER BY created_at DESC",
+                "book_id": "SELECT * FROM reviews WHERE book_id = %s ORDER BY created_at DESC",
+                "rating": "SELECT * FROM reviews WHERE rating = %s ORDER BY created_at DESC",
+            }
+
+            if key not in queries:
                 raise ValueError(f"Invalid column: {key}")
+
             with get_cursor() as cursor:
-                cursor.execute(f"SELECT * FROM reviews WHERE {key} = %s ORDER BY created_at DESC",(value,))
-                if key == 'id':
+                cursor.execute(queries[key], (value,))
+
+                if key == "id":
                     review = cursor.fetchone()
                     return ReviewEntity(**review) if review else None
+
                 reviews = cursor.fetchall()
                 return [ReviewEntity(**u) for u in reviews]
+
         except Exception as e:
             logger.exception(f"Erro ao buscar avaliações: {e}")
             return None
