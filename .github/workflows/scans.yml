@@ -104,6 +104,14 @@ jobs:
             --format=json
             --output-file=osv.json
 
+      - name: Upload relatório OSV
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: osv-report
+          path: osv.json
+          if-no-files-found: warn
+
       - name: Resumir findings SCA
         id: resultados
         if: ${{ always() }}
