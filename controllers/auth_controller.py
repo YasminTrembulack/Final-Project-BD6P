@@ -89,7 +89,7 @@ def configure_routes(app: Flask):
     def logout():
         """Finaliza a sessão atual e retorna à página anterior ou inicial."""
         session.clear()
-        return redirect(request.referrer or url_for('index'))
+        return redirect(url_for('index'))
 
 
     # ==========================================================
