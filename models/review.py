@@ -24,7 +24,7 @@ class Review:
     def get_reviews() -> List[ReviewEntity]:
         try:
             with get_cursor() as cursor:
-                cursor.execute("SELECT *, DATE_FORMAT(created_at, '%d/%m/%Y %H:%i:%s') as created_at FROM reviews ORDER BY created_at DES")
+                cursor.execute("SELECT *, DATE_FORMAT(created_at, '%d/%m/%Y %H:%i:%s') as created_at FROM reviews ORDER BY created_at DESC")
                 reviews = cursor.fetchall()
                 return [ReviewEntity(**u) for u in reviews]
         except Exception as e:

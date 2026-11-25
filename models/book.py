@@ -51,7 +51,7 @@ class Book:
     def list_distinct_categories() -> Optional[List[str]]:
         try:
             with get_cursor() as cursor:
-                cursor.execute(f"SELECT DISTINCT category FROM books;")
+                cursor.execute("SELECT DISTINCT category FROM books;")
                 categories = cursor.fetchall()
                 return [category['category'] for category in categories]
         except Exception as e:
@@ -61,16 +61,15 @@ class Book:
     # GET - retorna livros a partir de um campo
     @staticmethod
     def get_book_by_field(key: str, value: str) -> Optional[List[BookEntity]] | Optional[BookEntity]:
-        queries = {
-            "id": "SELECT * FROM books WHERE id = %s",
-            "upc": "SELECT * FROM books WHERE upc = %s",
-            "title": "SELECT * FROM books WHERE title = %s",
-            "category": "SELECT * FROM books WHERE category = %s",
-            "author": "SELECT * FROM books WHERE author = %s",
-        }
         try:
-            allowed_keys = {"id", "upc", "title", "category", "author"}
-            if key not in allowed_keys:
+            queries = {
+                "id": "SELECT * FROM books WHERE id = %s",
+                "upc": "SELECT * FROM books WHERE upc = %s",
+                "title": "SELECT * FROM books WHERE title = %s",
+                "category": "SELECT * FROM books WHERE category = %s",
+                "author": "SELECT * FROM books WHERE author = %s",
+            }
+            if key not in queries:
                 raise ValueError(f"Invalid column: {key}")
             with get_cursor() as cursor:
                 cursor.execute(queries[key], (value,))

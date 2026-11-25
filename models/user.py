@@ -46,10 +46,10 @@ class User:
     def get_user_by_field(key: str, value: str) -> Optional[List[UserEntity]] | Optional[UserEntity]:
         try:
             queries = {
-                "id": "SELECT * FROM final_project_db.users WHERE id = %s",
-                "username": "SELECT * FROM final_project_db.users WHERE username = %s",
-                "email": "SELECT * FROM final_project_db.users WHERE email = %s",
-                "role": "SELECT * FROM final_project_db.users WHERE role = %s",
+                "id": "SELECT * FROM users WHERE id = %s",
+                "username": "SELECT * FROM users WHERE username = %s",
+                "email": "SELECT * FROM users WHERE email = %s",
+                "role": "SELECT * FROM users WHERE role = %s",
             }
 
             if key not in queries:
@@ -75,7 +75,7 @@ class User:
             with get_cursor() as cursor:
                 cursor.execute(
                     """
-                        INSERT INTO final_project_db.users (id, username, password, email, role)
+                        INSERT INTO users (id, username, password, email, role)
                         VALUES (%s, %s, %s, %s, %s)
                     """, (user.id, user.username, user.password, user.email, user.role),
                 )
@@ -90,7 +90,7 @@ class User:
         try:
             with get_cursor() as cursor:
                 cursor.execute(
-                    "UPDATE final_project_db.users SET username = %s, email = %s, password = %s, role = %s WHERE id = %s",
+                    "UPDATE users SET username = %s, email = %s, password = %s, role = %s WHERE id = %s",
                     (user.username, user.email, user.password, user.role, user.id),
                 )
             return True
@@ -103,7 +103,7 @@ class User:
     def delete_user(id: str) -> bool:
         try:
             with get_cursor() as cursor:
-                cursor.execute("DELETE FROM final_project_db.users WHERE id = %s", (id,))
+                cursor.execute("DELETE FROM users WHERE id = %s", (id,))
             return True
         except Exception as e:
             logger.exception(f"Erro ao deletar usuário: {e}")
