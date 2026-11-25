@@ -6,3 +6,6 @@ python-dotenv==1.2.2
 reportlab==4.4.4
 requests==2.33.0
 flask_mail==0.10.0
+certifi==2026.11.20
+idna==3.20
+Pillow==13.0.0
