@@ -1,3 +1,4 @@
+import os
 import bcrypt
 
 from flask_mail import Mail, Message
@@ -8,6 +9,7 @@ from models.user import User
 
 from itsdangerous import URLSafeTimedSerializer
 
+BASE_URL = os.getenv('APP_BASE_URL', 'http://127.0.0.1:5000').rstrip('/')
 
 def configure_routes(app: Flask):
     """
@@ -116,7 +118,7 @@ def configure_routes(app: Flask):
             token = serializer.dumps(user.email, salt='password-reset-salt')
 
             # --- Gera o link de redefinição completo ---
-            reset_url = url_for('reset_password', token=token, _external=True)
+            reset_url = f"{BASE_URL}{url_for('reset_password', token=token)}"
 
             # --- Gera o conteúdo HTML do e-mail ---
             html = render_template(
