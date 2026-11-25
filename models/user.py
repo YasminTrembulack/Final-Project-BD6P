@@ -45,15 +45,25 @@ class User:
     @staticmethod
     def get_user_by_field(key: str, value: str) -> Optional[List[UserEntity]] | Optional[UserEntity]:
         try:
-            allowed_keys = {"id", "username", "email", "role"}
-            if key not in allowed_keys:
+            queries = {
+                "id": "SELECT * FROM final_project_db.users WHERE id = %s",
+                "username": "SELECT * FROM final_project_db.users WHERE username = %s",
+                "email": "SELECT * FROM final_project_db.users WHERE email = %s",
+                "role": "SELECT * FROM final_project_db.users WHERE role = %s",
+            }
+
+            if key not in queries:
                 raise ValueError(f"Invalid column: {key}")
+
             with get_cursor() as cursor:
-                cursor.execute(f"SELECT * FROM final_project_db.users WHERE {key} = %s", (value,))
-                if key == 'role':
+                cursor.execute(queries[key], (value,))
+
+                if key == "role":
                     return [UserEntity(**u) for u in cursor.fetchall()]
+
                 user = cursor.fetchone()
                 return UserEntity(**user) if user else None
+
         except Exception as e:
             logger.exception(f"Erro ao buscar usuários: {e}")
             return None
